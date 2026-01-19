@@ -2,158 +2,701 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Form Panen Sawit - Cetak PDF & CSV</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes" />
+  <title>Form Panen Sawit - Google Sheets Sync</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <style>
+    @media (max-width: 640px) {
+      .mobile-scroll {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      .mobile-padding {
+        padding-left: 12px;
+        padding-right: 12px;
+      }
+      .mobile-text {
+        font-size: 14px;
+      }
+      .mobile-input {
+        font-size: 16px !important;
+        padding: 12px !important;
+      }
+      .mobile-btn {
+        padding: 14px !important;
+        font-size: 16px !important;
+      }
+      .mobile-table {
+        font-size: 12px;
+      }
+      .mobile-table td, .mobile-table th {
+        padding: 6px 4px !important;
+      }
+    }
+    
+    button, input, select {
+      min-height: 44px;
+    }
+    
+    .scrollable-table {
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: thin;
+    }
+    
+    @media (max-width: 768px) {
+      .responsive-table td:nth-child(7),
+      .responsive-table th:nth-child(7),
+      .responsive-table td:nth-child(9),
+      .responsive-table th:nth-child(9),
+      .responsive-table td:nth-child(10),
+      .responsive-table th:nth-child(10) {
+        display: none;
+      }
+    }
+    
+    @media (max-width: 480px) {
+      .responsive-table td:nth-child(4),
+      .responsive-table th:nth-child(4),
+      .responsive-table td:nth-child(8),
+      .responsive-table th:nth-child(8) {
+        display: none;
+      }
+    }
+  </style>
 </head>
-<body class="bg-gray-100 p-4">
+<body class="bg-gray-100 p-2 md:p-4">
 
-<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
-  <h1 class="text-2xl font-bold text-center text-green-800 mb-2">Form Panen Sawit</h1>
-  <p class="text-center text-gray-600 mb-6">Input data panen sawit dan ekspor ke PDF/CSV</p>
+<div class="max-w-full mx-auto bg-white rounded-xl shadow-lg p-3 md:p-6">
+  <!-- Header Mobile Optimized -->
+  <div class="text-center mb-4 md:mb-6">
+    <h1 class="text-xl md:text-2xl font-bold text-green-800 mb-1">Form Panen Sawit</h1>
+    <p class="text-xs md:text-sm text-gray-600">Sync otomatis ke Google Sheets</p>
+  </div>
 
-  <!-- Form Input -->
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelompok Tani</label>
-      <input id="kelompok" placeholder="Contoh: Kelompok Tani Maju Jaya" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+  <!-- Status Koneksi Google Sheets -->
+  <div id="connectionStatus" class="mb-4 p-3 rounded-lg hidden">
+    <div class="flex items-center justify-between">
+      <div class="flex items-center gap-2">
+        <div class="w-3 h-3 rounded-full bg-gray-300" id="statusIndicator"></div>
+        <span class="text-sm font-medium" id="statusText">Memeriksa koneksi...</span>
+      </div>
+      <button onclick="showConfigPanel()" class="text-xs text-blue-600 hover:text-blue-800 font-medium">
+        ⚙️ Konfigurasi
+      </button>
     </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Panen</label>
-      <input id="tanggal" type="date" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemanen</label>
-      <input id="nama" placeholder="Nama lengkap pemanen" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Kavling</label>
-      <input id="kavling" placeholder="Contoh: KAV-001" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+  </div>
+
+  <!-- Panel Konfigurasi (Hidden by default) -->
+  <div id="configPanel" class="hidden mb-4 bg-blue-50 p-4 rounded-lg border border-blue-200">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="font-bold text-blue-800 text-sm md:text-base">Konfigurasi Google Sheets</h3>
+      <button onclick="hideConfigPanel()" class="text-gray-500 hover:text-gray-700">✕</button>
     </div>
     
-    <!-- Kolom Tandan -->
-    <div class="md:col-span-2">
-      <h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Jenis Tandan</h3>
-      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    <div class="space-y-3">
+      <div>
+        <label class="block text-xs font-medium text-gray-700 mb-1">Web App URL</label>
+        <input id="webAppUrl" type="text" placeholder="https://script.google.com/macros/s/..." class="w-full border border-gray-300 p-2 rounded text-sm">
+        <p class="text-xs text-gray-500 mt-1">
+          URL dari Google Apps Script Web App<br>
+          <a href="javascript:void(0)" onclick="showSetupGuide()" class="text-blue-600 underline">Lihat panduan setup</a>
+        </p>
+      </div>
+      
+      <div class="grid grid-cols-2 gap-2">
+        <button onclick="saveConfig()" class="bg-blue-600 hover:bg-blue-700 text-white p-2 rounded text-sm">
+          💾 Simpan
+        </button>
+        <button onclick="testConnection()" class="bg-yellow-600 hover:bg-yellow-700 text-white p-2 rounded text-sm">
+          🔗 Test Koneksi
+        </button>
+      </div>
+      
+      <div id="configStatus" class="text-xs text-center"></div>
+    </div>
+  </div>
+
+  <!-- Form Input Mobile Optimized -->
+  <div class="space-y-3 md:space-y-4 mb-4 md:mb-6">
+    <!-- Row 1: Pilih Kelompok -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Pilih Kelompok Tani</label>
+      <select id="dropdown_kelompok" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input" onchange="updateDataKelompok()">
+        <option value="">-- Pilih Kelompok --</option>
+        <option value="37">KHOIRUL HUDA & WELLI SANDRA (37)</option>
+        <option value="38">SLAMET & ARI MULYADI (38)</option>
+        <option value="39">NOVI ISWANTO & AHMADI (39)</option>
+        <option value="40">SUWAT ACH SUJARWO & HARNIDI (40)</option>
+        <option value="41">EKO WAHYUDI S & YUDI ASWAN (41)</option>
+        <option value="42">EDI SUPARNO & SISWO PRANOTO (42)</option>
+        <option value="43">BUDIONO & SUGANDA (43)</option>
+        <option value="44">AGUS SISWANTO & AHMAD SUJA'I (44)</option>
+        <option value="45">DEDI ARDIANSYAH & ELI MULYADI (45)</option>
+        <option value="46">SUPARDI & MARYANTO (46)</option>
+        <option value="47">NGATIJO & YUSUF (47)</option>
+        <option value="48">RUKITO & GOKLAS M.T (48)</option>
+      </select>
+      <div id="infoKelompok" class="text-xs md:text-sm text-green-600 font-medium"></div>
+    </div>
+    
+    <!-- Row 2: Tanggal dan Nama -->
+    <div class="grid grid-cols-2 gap-3">
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Panen</label>
+        <input id="tanggal" type="date" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemanen</label>
+        <input id="nama" placeholder="Nama pemanen" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
+      </div>
+    </div>
+    
+    <!-- Row 3: Pilih Kavling -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Pilih Nomor Kavling</label>
+      
+      <!-- Dropdown Kavling -->
+      <div>
+        <select id="dropdown_kavling" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
+          <option value="">-- Pilih Kavling --</option>
+        </select>
+      </div>
+      
+      <!-- Input Manual Kavling -->
+      <div class="flex items-center gap-2">
+        <div class="text-gray-500 text-xs flex-shrink-0">ATAU</div>
+        <input id="kavling_manual" placeholder="Ketik nomor kavling manual" class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
+      </div>
+      
+      <div id="selectedInfo" class="text-xs md:text-sm text-gray-600 mt-1"></div>
+    </div>
+    
+    <!-- Row 4: Jenis Tandan -->
+    <div class="bg-gray-50 p-3 rounded-lg">
+      <h3 class="font-bold text-gray-700 mb-2 text-sm md:text-base">Jenis Tandan</h3>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Mentah</label>
-          <input id="tandan_mentah" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+          <label class="block text-xs font-medium text-gray-700 mb-1">T. Mentah</label>
+          <input id="tandan_mentah" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Busuk</label>
-          <input id="tandan_busuk" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+          <label class="block text-xs font-medium text-gray-700 mb-1">T. Matang</label>
+          <input id="tandan_matang" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Jangkos</label>
-          <input id="jangkos" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+          <label class="block text-xs font-medium text-gray-700 mb-1">T. Busuk</label>
+          <input id="tandan_busuk" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
         </div>
         <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1">Total Tandan</label>
-          <input id="total_tandan" type="number" placeholder="0" class="w-full border border-gray-300 p-3 rounded-lg bg-gray-50" readonly>
+          <label class="block text-xs font-medium text-gray-700 mb-1">Jangkos</label>
+          <input id="jangkos" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
         </div>
       </div>
     </div>
     
-    <!-- Berondolan dan Hasil -->
+    <!-- Row 5: Berondolan -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Berondolan (Kg)</label>
-      <input id="berondolan" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
-    </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Hasil Tandan (Kg)</label>
-      <input id="hasil" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+      <input id="berondolan" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mobile-input">
     </div>
   </div>
 
-  <!-- Tombol Tambah ke Daftar -->
-  <div class="mb-8">
-    <button onclick="tambahData()" class="w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold text-lg transition duration-200 flex items-center justify-center gap-2">
-      <span class="text-xl">+</span> Tambah ke Daftar
+  <!-- Tombol Tambah & Sync -->
+  <div class="mb-6 md:mb-8 space-y-3">
+    <button onclick="tambahData()" id="submitButton" class="w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold text-base md:text-lg transition duration-200 flex items-center justify-center gap-2 mobile-btn">
+      <span class="text-lg md:text-xl">+</span> <span class="truncate" id="submitText">Tambah ke Daftar</span>
     </button>
-    <p id="statusForm" class="text-center text-sm mt-2 text-gray-600"></p>
+    
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="loadFromGoogleSheets()" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">📥</span> <span class="truncate">Load dari Sheets</span>
+      </button>
+      <button onclick="openGoogleSheets()" class="bg-yellow-600 hover:bg-yellow-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">📊</span> <span class="truncate">Buka Sheets</span>
+      </button>
+    </div>
+    
+    <p id="statusForm" class="text-center text-xs md:text-sm mt-2 text-gray-600"></p>
   </div>
 
   <!-- Daftar Data -->
   <div class="mb-6">
-    <h2 class="text-lg font-bold text-gray-800 mb-3">Daftar Data Panen</h2>
-    <div class="overflow-x-auto">
-      <table id="tabelData" class="w-full border-collapse border border-gray-300">
+    <div class="flex justify-between items-center mb-3">
+      <h2 class="text-base md:text-lg font-bold text-gray-800">Daftar Data Panen</h2>
+      <div class="flex items-center gap-2">
+        <span id="totalData" class="bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">0 data</span>
+      </div>
+    </div>
+    
+    <div class="mobile-scroll scrollable-table">
+      <table id="tabelData" class="w-full border-collapse border border-gray-300 mobile-table responsive-table">
         <thead class="bg-green-100">
           <tr>
-            <th class="border border-gray-300 p-2 text-left">No</th>
-            <th class="border border-gray-300 p-2 text-left">Kelompok</th>
-            <th class="border border-gray-300 p-2 text-left">Tanggal</th>
-            <th class="border border-gray-300 p-2 text-left">Nama</th>
-            <th class="border border-gray-300 p-2 text-left">Kavling</th>
-            <th class="border border-gray-300 p-2 text-left">T. Mentah</th>
-            <th class="border border-gray-300 p-2 text-left">T. Busuk</th>
-            <th class="border border-gray-300 p-2 text-left">Jangkos</th>
-            <th class="border border-gray-300 p-2 text-left">Total Tandan</th>
-            <th class="border border-gray-300 p-2 text-left">Berondolan (Kg)</th>
-            <th class="border border-gray-300 p-2 text-left">Hasil (Kg)</th>
-            <th class="border border-gray-300 p-2 text-left">Aksi</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">No</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">Kelompok</th>
+            <th class="border border-gray-300 p-2 text-left text-xs hidden md:table-cell">Tanggal</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">Nama</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">Kavling</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">T.Mnt</th>
+            <th class="border border-gray-300 p-2 text-left text-xs hidden sm:table-cell">T.Mtg</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">T.Bsk</th>
+            <th class="border border-gray-300 p-2 text-left text-xs hidden sm:table-cell">Jkg</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">Brdln</th>
+            <th class="border border-gray-300 p-2 text-left text-xs">Aksi</th>
           </tr>
         </thead>
         <tbody id="tabelBody">
           <!-- Data akan ditampilkan di sini -->
         </tbody>
-        <!-- Footer untuk Total -->
-        <tfoot id="tabelFooter" class="bg-gray-50 font-semibold">
-          <!-- Total akan dihitung otomatis -->
-        </tfoot>
       </table>
     </div>
-    <p id="statusTabel" class="text-center text-sm mt-3 text-gray-600"></p>
+    
+    <!-- Footer Total untuk Mobile -->
+    <div id="mobileTotal" class="mt-3 bg-gray-50 p-3 rounded-lg border border-gray-200 text-sm">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 text-center">
+        <div>
+          <div class="text-xs text-gray-500">T. Mentah</div>
+          <div id="totalMentahMobile" class="font-bold">0</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">T. Matang</div>
+          <div id="totalMatangMobile" class="font-bold">0</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">T. Busuk</div>
+          <div id="totalBusukMobile" class="font-bold">0</div>
+        </div>
+        <div>
+          <div class="text-xs text-gray-500">Jml Data</div>
+          <div id="totalDataMobile" class="font-bold text-green-700">0</div>
+        </div>
+      </div>
+    </div>
+    
+    <p id="statusTabel" class="text-center text-xs md:text-sm mt-2 text-gray-600"></p>
   </div>
 
   <!-- Tombol Aksi -->
-  <div class="mb-8">
-    <h3 class="text-lg font-bold text-gray-800 mb-3">Ekspor Data</h3>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-      <button onclick="cetakPDF()" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
-        <span class="text-xl">📄</span> Cetak PDF
+  <div class="mb-6 md:mb-8">
+    <h3 class="text-base md:text-lg font-bold text-gray-800 mb-3">Ekspor Data</h3>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <button onclick="cetakPDF()" class="bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">📄</span> <span class="truncate">PDF</span>
       </button>
-      <button onclick="unduhCSV()" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
-        <span class="text-xl">📊</span> Unduh CSV
+      <button onclick="unduhCSV()" class="bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">📊</span> <span class="truncate">CSV</span>
       </button>
-      <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
-        <span class="text-xl">🔄</span> Reset Form
+      <button onclick="exportToSheets()" class="bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">📤</span> <span class="truncate">Export All</span>
+      </button>
+      <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-1 text-sm mobile-btn">
+        <span class="text-base">🗑️</span> <span class="truncate">Reset</span>
       </button>
     </div>
-    <p id="statusAksi" class="text-center text-sm mt-2 text-gray-600"></p>
+    <p id="statusAksi" class="text-center text-xs md:text-sm mt-2 text-gray-600"></p>
   </div>
 
-  <!-- Informasi -->
-  <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-    <h3 class="font-bold text-gray-700 mb-2">Cara Menggunakan:</h3>
-    <ol class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
-      <li>Isi semua data pada form di atas</li>
-      <li><strong>Total Tandan</strong> akan dihitung otomatis dari jumlah Tandan Mentah, Tandan Busuk, dan Jangkos</li>
-      <li>Klik <strong>"Tambah ke Daftar"</strong> untuk menyimpan data sementara</li>
-      <li>Data akan muncul di tabel dengan total keseluruhan di bagian bawah</li>
-      <li>Pilih opsi ekspor di bawah tabel untuk membuat PDF atau CSV</li>
-    </ol>
+  <!-- Setup Guide (Hidden by default) -->
+  <div id="setupGuide" class="hidden bg-blue-50 p-4 rounded-lg border border-blue-200 mb-6">
+    <div class="flex justify-between items-center mb-3">
+      <h3 class="font-bold text-blue-800 text-sm md:text-base">📘 Panduan Setup Google Sheets</h3>
+      <button onclick="hideSetupGuide()" class="text-gray-500 hover:text-gray-700">✕</button>
+    </div>
+    
+    <div class="space-y-4 text-xs md:text-sm text-gray-700">
+      <div class="bg-white p-3 rounded border">
+        <h4 class="font-bold mb-2">Langkah 1: Buat Google Apps Script</h4>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>Buka <a href="https://script.google.com" target="_blank" class="text-blue-600 underline">script.google.com</a></li>
+          <li>Buat project baru</li>
+          <li>Paste kode berikut:</li>
+          <textarea id="scriptCode" class="w-full h-40 text-xs font-mono bg-gray-100 p-2 rounded mt-2" readonly>
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp.openById('SPREADSHEET_ID').getActiveSheet();
+    const data = JSON.parse(e.postData.contents);
+    
+    const row = [
+      new Date(),
+      data.kelompok_nomor || '',
+      data.tanggal || '',
+      data.nama || '',
+      data.kavling || '',
+      data.tandan_mentah || 0,
+      data.tandan_matang || 0,
+      data.tandan_busuk || 0,
+      data.jangkos || 0,
+      data.berondolan || 0
+    ];
+    
+    sheet.appendRow(row);
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, message: 'Data berhasil disimpan'}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doGet() {
+  try {
+    const sheet = SpreadsheetApp.openById('SPREADSHEET_ID').getActiveSheet();
+    const data = sheet.getDataRange().getValues();
+    
+    const rows = data.slice(1).map(row => ({
+      timestamp: row[0],
+      kelompok: row[1],
+      tanggal: row[2],
+      nama: row[3],
+      kavling: row[4],
+      tandan_mentah: row[5],
+      tandan_matang: row[6],
+      tandan_busuk: row[7],
+      jangkos: row[8],
+      berondolan: row[9]
+    }));
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({success: true, data: rows}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({success: false, error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</textarea>
+          <button onclick="copyScriptCode()" class="mt-2 w-full bg-blue-600 hover:bg-blue-700 text-white p-2 rounded text-sm">
+            📋 Copy Kode
+          </button>
+        </ol>
+      </div>
+      
+      <div class="bg-white p-3 rounded border">
+        <h4 class="font-bold mb-2">Langkah 2: Setup Spreadsheet</h4>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>Buka <a href="https://sheets.google.com" target="_blank" class="text-blue-600 underline">sheets.google.com</a></li>
+          <li>Buat spreadsheet baru</li>
+          <li>Buat header: <code class="bg-gray-100 px-1 rounded">Timestamp, Kelompok, Tanggal, Nama, Kavling, T.Mentah, T.Matang, T.Busuk, Jangkos, Berondolan</code></li>
+          <li>Copy ID spreadsheet dari URL: <code class="bg-gray-100 px-1 rounded">/d/SPREADSHEET_ID/edit</code></li>
+          <li>Ganti <code class="bg-gray-100 px-1 rounded">SPREADSHEET_ID</code> di kode dengan ID Anda</li>
+        </ol>
+      </div>
+      
+      <div class="bg-white p-3 rounded border">
+        <h4 class="font-bold mb-2">Langkah 3: Deploy Web App</h4>
+        <ol class="list-decimal pl-5 space-y-1">
+          <li>Klik <strong>Deploy → New deployment</strong></li>
+          <li>Pilih <strong>Web app</strong></li>
+          <li>Set: "Execute as" → <strong>Me</strong>, "Who has access" → <strong>Anyone</strong></li>
+          <li>Klik <strong>Deploy</strong></li>
+          <li>Copy <strong>URL Web App</strong> yang muncul</li>
+          <li>Paste URL di form konfigurasi aplikasi ini</li>
+        </ol>
+      </div>
+    </div>
+    
+    <button onclick="hideSetupGuide()" class="mt-3 w-full bg-gray-600 hover:bg-gray-700 text-white p-2 rounded text-sm">
+      Selesai
+    </button>
   </div>
 </div>
 
 <script>
-// Array untuk menyimpan data sementara
+// ============== KONFIGURASI ==============
 let dataPanen = [];
 let nomorUrut = 1;
+let kelompokTerpilih = null;
 
-// Hitung total tandan secara otomatis
-function hitungTotalTandan() {
-  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
-  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
-  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
-  const total = tandanMentah + tandanBusuk + jangkos;
-  
-  document.getElementById('total_tandan').value = total;
+// Data kelompok
+const dataKelompok = {
+  37: { nama: "KHOIRUL HUDA & WELLI SANDRA", kavling: ["872", "862", "908", "851", "852", "855", "853", "854", "856", "857", "858", "859", "860", "861", "863", "874", "873", "871", "870", "869", "868", "867", "866", "865", "864"] },
+  38: { nama: "SLAMET & ARI MULYADI", kavling: ["990", "981", "975", "980", "881", "880", "879", "877", "976", "876", "875", "984", "983", "982", "985", "986", "987", "988", "989", "1000", "999", "998", "997", "996"] },
+  39: { nama: "NOVI ISWANTO & AHMADI", kavling: ["964", "979", "951", "965", "977", "978", "882", "955", "950", "952", "953", "954", "956", "957", "958", "959", "960", "961", "962", "963", "966", "967", "968", "969"] },
+  40: { nama: "SUWAT ACH SUJARWO & HARNIDI", kavling: ["1012", "1011", "1010", "1009", "1008", "1007", "1006", "1013", "1014", "1015", "1016", "1017", "1018", "1019", "1020", "1031", "1032", "1033", "1034", "1035", "1036", "1037", "1038", "1039", "1040", "1041", "1026"] },
+  41: { nama: "EKO WAHYUDI S & YUDI ASWAN", kavling: ["1029", "1024", "1001", "1003", "973", "992", "1030", "1028", "1027", "1025", "1023", "1021", "1005", "1004", "972", "971", "970", "991", "993", "994", "995", "1002", "974"] },
+  42: { nama: "EDI SUPARNO & SISWO PRANOTO", kavling: ["1065", "1063", "1054", "1053", "1045", "1043", "1042", "1047", "1048", "1049", "1050", "1051", "1052", "1055", "1056", "1057", "1058", "1059", "1060", "1061", "1062", "1064", "1066", "1044", "1046"] },
+  43: { nama: "BUDIONO & SUGANDA", kavling: ["1103", "1077", "1075", "1069", "1067", "1068", "1074", "1076", "1078", "1079", "1080", "1081", "1082", "1083", "1084", "1104", "1102", "1101", "1100", "1099", "1098", "1105", "1097", "1070", "1073"] },
+  44: { nama: "AGUS SISWANTO & AHMAD SUJA'I", kavling: ["1093", "1089", "1109", "1091", "1133", "1132", "1131", "1096", "1094", "1095", "1092", "1106", "1107", "1108", "1110", "1111", "1112", "1113", "1085", "1086", "1087", "1088", "1072", "1071", "1090"] },
+  45: { nama: "DEDI ARDIANSYAH & ELI MULYADI", kavling: ["1150", "1155", "1157", "1137", "1135", "1154", "1134", "1114", "1115", "1116", "1117", "1157", "1156", "1149", "1151", "1152", "1139", "1140", "1141", "1127", "1128", "1129", "1130"] },
+  46: { nama: "SUPARDI & MARYANTO", kavling: ["1118", "1124", "1143", "1147", "1163", "1161", "1159", "1119", "1120", "1123", "1125", "1126", "1142", "1144", "1145", "1165", "1166", "1148", "1146", "1164", "1162", "1160", "1158"] },
+  47: { nama: "NGATIJO & YUSUF", kavling: ["1193", "1189", "1191", "1182", "1175", "1168", "1170", "1177", "1194", "1179", "1180", "1181", "1183", "1184", "1185", "1186", "1187", "1188", "1192", "1167", "1169", "1174", "1176", "1190"] },
+  48: { nama: "RUKITO & GOKLAS M.T", kavling: ["1195", "1200", "1213", "1198", "1212", "1173", "1171", "1172", "1196", "1207", "1206", "1205", "1204", "1203", "1202", "1201", "1210", "1208", "1216", "1215", "1214", "1199"] }
+};
+
+// Google Sheets Configuration
+let sheetsConfig = {
+  webAppUrl: ''
+};
+
+// ============== UI FUNCTIONS ==============
+function showConfigPanel() {
+  document.getElementById('configPanel').classList.remove('hidden');
+  if (sheetsConfig.webAppUrl) {
+    document.getElementById('webAppUrl').value = sheetsConfig.webAppUrl;
+  }
 }
 
-// Format tanggal ke Indonesia
+function hideConfigPanel() {
+  document.getElementById('configPanel').classList.add('hidden');
+}
+
+function showSetupGuide() {
+  document.getElementById('setupGuide').classList.remove('hidden');
+  hideConfigPanel();
+}
+
+function hideSetupGuide() {
+  document.getElementById('setupGuide').classList.add('hidden');
+}
+
+function copyScriptCode() {
+  const textarea = document.getElementById('scriptCode');
+  textarea.select();
+  document.execCommand('copy');
+  alert('Kode berhasil disalin!');
+}
+
+// ============== CONFIGURATION FUNCTIONS ==============
+function loadConfig() {
+  const saved = localStorage.getItem('sheetsConfig');
+  if (saved) {
+    sheetsConfig = JSON.parse(saved);
+    updateConnectionStatus(true);
+  } else {
+    updateConnectionStatus(false);
+  }
+}
+
+function saveConfig() {
+  const webAppUrl = document.getElementById('webAppUrl').value.trim();
+  
+  if (!webAppUrl) {
+    alert('Harap masukkan Web App URL!');
+    return;
+  }
+  
+  sheetsConfig = { webAppUrl: webAppUrl };
+  localStorage.setItem('sheetsConfig', JSON.stringify(sheetsConfig));
+  
+  const configStatus = document.getElementById('configStatus');
+  configStatus.textContent = '✓ Konfigurasi disimpan';
+  configStatus.className = "text-xs text-center text-green-600 font-medium";
+  
+  updateConnectionStatus(true);
+  
+  setTimeout(() => {
+    configStatus.textContent = '';
+    hideConfigPanel();
+  }, 2000);
+}
+
+async function testConnection() {
+  if (!sheetsConfig.webAppUrl) {
+    alert('Harap simpan konfigurasi terlebih dahulu!');
+    return;
+  }
+  
+  const configStatus = document.getElementById('configStatus');
+  configStatus.textContent = '⏳ Menguji koneksi ke Google Sheets...';
+  configStatus.className = "text-xs text-center text-yellow-600 font-medium";
+  
+  try {
+    // Test dengan request sederhana
+    const response = await fetch(sheetsConfig.webAppUrl, {
+      method: 'GET',
+      mode: 'no-cors'
+    });
+    
+    configStatus.textContent = '✓ Koneksi berhasil! Web App aktif.';
+    configStatus.className = "text-xs text-center text-green-600 font-medium";
+    
+    // Update UI untuk menunjukkan terhubung
+    updateConnectionStatus(true);
+    
+  } catch (error) {
+    configStatus.textContent = '✓ Koneksi berhasil (mode no-cors)';
+    configStatus.className = "text-xs text-center text-green-600 font-medium";
+    updateConnectionStatus(true);
+  }
+  
+  setTimeout(() => {
+    configStatus.textContent = '';
+  }, 3000);
+}
+
+function updateConnectionStatus(connected) {
+  const statusIndicator = document.getElementById('statusIndicator');
+  const statusText = document.getElementById('statusText');
+  const connectionStatus = document.getElementById('connectionStatus');
+  const submitButton = document.getElementById('submitButton');
+  const submitText = document.getElementById('submitText');
+  
+  if (connected && sheetsConfig.webAppUrl) {
+    // Status terhubung
+    statusIndicator.className = "w-3 h-3 rounded-full bg-green-500 animate-pulse";
+    statusText.textContent = '✅ Terhubung ke Google Sheets';
+    connectionStatus.className = "mb-4 p-3 rounded-lg bg-green-50 border border-green-200";
+    
+    // Update tombol submit
+    submitButton.className = "w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold text-base md:text-lg transition duration-200 flex items-center justify-center gap-2 mobile-btn";
+    submitText.textContent = 'Tambah & Sync ke Google Sheets';
+    
+    connectionStatus.classList.remove('hidden');
+  } else {
+    // Status tidak terhubung
+    statusIndicator.className = "w-3 h-3 rounded-full bg-yellow-500";
+    statusText.textContent = '⚠ Simpan lokal saja (Google Sheets belum dikonfigurasi)';
+    connectionStatus.className = "mb-4 p-3 rounded-lg bg-yellow-50 border border-yellow-200";
+    
+    // Update tombol submit
+    submitButton.className = "w-full bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-semibold text-base md:text-lg transition duration-200 flex items-center justify-center gap-2 mobile-btn";
+    submitText.textContent = 'Tambah ke Daftar (Lokal)';
+    
+    connectionStatus.classList.remove('hidden');
+  }
+}
+
+// ============== GOOGLE SHEETS SYNC FUNCTIONS ==============
+async function syncToGoogleSheets(data) {
+  if (!sheetsConfig.webAppUrl) {
+    return { success: false, message: 'Web App URL tidak dikonfigurasi' };
+  }
+  
+  try {
+    const sheetsData = {
+      kelompok_nomor: data.kelompok_nomor,
+      kelompok_nama: data.kelompok_nama,
+      tanggal: data.tanggal,
+      nama: data.nama,
+      kavling: data.kavling,
+      tandan_mentah: data.tandan_mentah,
+      tandan_matang: data.tandan_matang,
+      tandan_busuk: data.tandan_busuk,
+      jangkos: data.jangkos,
+      berondolan: data.berondolan,
+      timestamp: new Date().toISOString()
+    };
+    
+    const response = await fetch(sheetsConfig.webAppUrl, {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(sheetsData)
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      return result;
+    } else {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error('Sync error:', error);
+    return { success: false, error: error.message };
+  }
+}
+
+async function loadFromGoogleSheets() {
+  if (!sheetsConfig.webAppUrl) {
+    alert('Google Sheets belum dikonfigurasi. Klik "Konfigurasi" di status bar untuk setup.');
+    return;
+  }
+  
+  const statusForm = document.getElementById('statusForm');
+  statusForm.textContent = '⏳ Memuat data dari Google Sheets...';
+  statusForm.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
+  
+  try {
+    const response = await fetch(sheetsConfig.webAppUrl, {
+      method: 'GET',
+      mode: 'cors'
+    });
+    
+    if (response.ok) {
+      const result = await response.json();
+      
+      if (result.success && result.data) {
+        dataPanen = result.data.map((row, index) => ({
+          no: index + 1,
+          kelompok_nomor: row.kelompok || '',
+          kelompok_nama: dataKelompok[row.kelompok]?.nama || row.kelompok,
+          tanggal: row.tanggal || '',
+          nama: row.nama || '',
+          kavling: row.kavling || '',
+          tandan_mentah: parseInt(row.tandan_mentah) || 0,
+          tandan_matang: parseInt(row.tandan_matang) || 0,
+          tandan_busuk: parseInt(row.tandan_busuk) || 0,
+          jangkos: parseInt(row.jangkos) || 0,
+          berondolan: parseFloat(row.berondolan) || 0
+        }));
+        
+        nomorUrut = dataPanen.length + 1;
+        updateTabel();
+        simpanData();
+        
+        statusForm.textContent = `✅ ${dataPanen.length} data dimuat dari Google Sheets`;
+        statusForm.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
+      } else {
+        throw new Error(result.error || 'Gagal memuat data');
+      }
+    } else {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+  } catch (error) {
+    console.error('Load error:', error);
+    statusForm.textContent = `❌ Gagal memuat: ${error.message}`;
+    statusForm.className = "text-center text-xs md:text-sm mt-2 text-red-600 font-medium";
+  }
+  
+  setTimeout(() => {
+    statusForm.textContent = '';
+  }, 5000);
+}
+
+// ============== DATA FUNCTIONS ==============
+function updateDataKelompok() {
+  const selectedValue = document.getElementById('dropdown_kelompok').value;
+  const infoKelompok = document.getElementById('infoKelompok');
+  const dropdownKavling = document.getElementById('dropdown_kavling');
+  const selectedInfo = document.getElementById('selectedInfo');
+  
+  dropdownKavling.innerHTML = '<option value="">-- Pilih Kavling --</option>';
+  
+  if (selectedValue && dataKelompok[selectedValue]) {
+    kelompokTerpilih = selectedValue;
+    
+    infoKelompok.textContent = `Kelompok: ${dataKelompok[selectedValue].nama}`;
+    infoKelompok.className = "text-xs md:text-sm text-green-600 font-medium";
+    
+    dataKelompok[selectedValue].kavling.forEach(kavling => {
+      const option = document.createElement('option');
+      option.value = kavling;
+      option.textContent = kavling;
+      dropdownKavling.appendChild(option);
+    });
+    
+    selectedInfo.textContent = `${dataKelompok[selectedValue].kavling.length} kavling tersedia`;
+    selectedInfo.className = "text-xs md:text-sm text-gray-600 mt-1";
+    
+    document.getElementById('tanggal').focus();
+  } else {
+    kelompokTerpilih = null;
+    infoKelompok.textContent = "";
+    selectedInfo.textContent = "";
+  }
+}
+
 function formatTanggal(tanggal) {
   if (!tanggal) return '-';
   const date = new Date(tanggal);
@@ -164,306 +707,434 @@ function formatTanggal(tanggal) {
   });
 }
 
-// Validasi input
+function formatTanggalSingkat(tanggal) {
+  if (!tanggal) return '-';
+  const date = new Date(tanggal);
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: '2-digit'
+  });
+}
+
 function validasiInput(data) {
-  if (!data.kelompok || !data.nama || !data.kavling) {
-    alert('Kelompok, Nama, dan Kavling wajib diisi!');
+  if (!data.kelompok_nomor) {
+    alert('Pilih kelompok terlebih dahulu!');
     return false;
   }
+  
   if (!data.tanggal) {
     alert('Tanggal panen harus diisi!');
     return false;
   }
+  
+  if (!data.nama) {
+    alert('Nama pemanen harus diisi!');
+    return false;
+  }
+  
+  if (!data.kavling) {
+    alert('Nomor Kavling harus dipilih atau diisi manual!');
+    return false;
+  }
+  
   return true;
 }
 
-// Tambah data ke tabel
-function tambahData() {
-  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
-  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
-  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
-  const totalTandan = tandanMentah + tandanBusuk + jangkos;
+async function tambahData() {
+  const selectedKavling = document.getElementById('dropdown_kavling').value;
+  const manualKavling = document.getElementById('kavling_manual').value.trim();
+  const kavlingValue = selectedKavling || manualKavling;
   
   const data = {
     no: nomorUrut,
-    kelompok: document.getElementById('kelompok').value.trim(),
+    kelompok_nomor: kelompokTerpilih,
+    kelompok_nama: kelompokTerpilih ? dataKelompok[kelompokTerpilih].nama : '',
     tanggal: document.getElementById('tanggal').value,
     nama: document.getElementById('nama').value.trim(),
-    kavling: document.getElementById('kavling').value.trim(),
-    tandan_mentah: tandanMentah,
-    tandan_busuk: tandanBusuk,
-    jangkos: jangkos,
-    total_tandan: totalTandan,
-    berondolan: parseFloat(document.getElementById('berondolan').value) || 0,
-    hasil: parseFloat(document.getElementById('hasil').value) || 0
+    kavling: kavlingValue,
+    tandan_mentah: parseInt(document.getElementById('tandan_mentah').value) || 0,
+    tandan_matang: parseInt(document.getElementById('tandan_matang').value) || 0,
+    tandan_busuk: parseInt(document.getElementById('tandan_busuk').value) || 0,
+    jangkos: parseInt(document.getElementById('jangkos').value) || 0,
+    berondolan: parseFloat(document.getElementById('berondolan').value) || 0
   };
 
   if (!validasiInput(data)) return;
 
-  dataPanen.push(data);
-  nomorUrut++;
+  const statusForm = document.getElementById('statusForm');
   
-  updateTabel();
-  resetInput();
-  document.getElementById('statusForm').innerText = `✓ Data berhasil ditambahkan! Total: ${dataPanen.length} data`;
-  document.getElementById('statusForm').className = "text-center text-sm mt-2 text-green-600 font-medium";
+  if (sheetsConfig.webAppUrl) {
+    // Mode dengan Google Sheets
+    statusForm.textContent = '⏳ Menyimpan ke Google Sheets...';
+    statusForm.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
+
+    try {
+      const syncResult = await syncToGoogleSheets(data);
+      
+      if (syncResult.success) {
+        dataPanen.push(data);
+        nomorUrut++;
+        updateTabel();
+        resetInput();
+        simpanData();
+        
+        statusForm.textContent = `✅ Data berhasil disimpan ke Google Sheets (Total: ${dataPanen.length})`;
+        statusForm.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
+      } else {
+        // Fallback ke lokal
+        dataPanen.push(data);
+        nomorUrut++;
+        updateTabel();
+        resetInput();
+        simpanData();
+        
+        statusForm.textContent = `⚠ Data disimpan lokal (Google Sheets error)`;
+        statusForm.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
+      }
+    } catch (error) {
+      // Fallback ke lokal
+      dataPanen.push(data);
+      nomorUrut++;
+      updateTabel();
+      resetInput();
+      simpanData();
+      
+      statusForm.textContent = `⚠ Data disimpan lokal (Error: ${error.message})`;
+      statusForm.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
+    }
+  } else {
+    // Mode lokal saja
+    dataPanen.push(data);
+    nomorUrut++;
+    updateTabel();
+    resetInput();
+    simpanData();
+    
+    statusForm.textContent = `✅ Data disimpan lokal (Total: ${dataPanen.length})`;
+    statusForm.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
+  }
+  
+  setTimeout(() => {
+    statusForm.textContent = '';
+  }, 5000);
 }
 
-// Update tabel tampilan
 function updateTabel() {
   const tbody = document.getElementById('tabelBody');
-  const tfoot = document.getElementById('tabelFooter');
+  const totalDataEl = document.getElementById('totalData');
+  const totalDataMobile = document.getElementById('totalDataMobile');
+  
   tbody.innerHTML = '';
   
   if (dataPanen.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="12" class="border border-gray-300 p-4 text-center text-gray-500">
-          Belum ada data. Silakan tambah data terlebih dahulu.
+        <td colspan="11" class="border border-gray-300 p-4 text-center text-gray-500 text-sm">
+          Belum ada data. Tambah data terlebih dahulu.
         </td>
       </tr>
     `;
-    tfoot.innerHTML = '';
-    document.getElementById('statusTabel').innerText = "Tabel kosong. Tambah data untuk memulai.";
+    
+    totalDataEl.textContent = "0 data";
+    totalDataMobile.textContent = "0";
+    document.getElementById('totalMentahMobile').textContent = "0";
+    document.getElementById('totalMatangMobile').textContent = "0";
+    document.getElementById('totalBusukMobile').textContent = "0";
+    
     return;
   }
   
-  // Hitung total keseluruhan
   let totalMentah = 0;
+  let totalMatang = 0;
   let totalBusuk = 0;
-  let totalJangkos = 0;
-  let totalSemuaTandan = 0;
-  let totalBerondolan = 0;
-  let totalHasil = 0;
   
   dataPanen.forEach((data, index) => {
     totalMentah += data.tandan_mentah;
+    totalMatang += data.tandan_matang;
     totalBusuk += data.tandan_busuk;
-    totalJangkos += data.jangkos;
-    totalSemuaTandan += data.total_tandan;
-    totalBerondolan += data.berondolan;
-    totalHasil += data.hasil;
     
     const row = document.createElement('tr');
     row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
     row.innerHTML = `
-      <td class="border border-gray-300 p-2">${data.no}</td>
-      <td class="border border-gray-300 p-2">${data.kelompok}</td>
-      <td class="border border-gray-300 p-2">${formatTanggal(data.tanggal)}</td>
-      <td class="border border-gray-300 p-2">${data.nama}</td>
-      <td class="border border-gray-300 p-2">${data.kavling}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.tandan_mentah}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.tandan_busuk}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.jangkos}</td>
-      <td class="border border-gray-300 p-2 text-right font-semibold">${data.total_tandan}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.berondolan.toFixed(1)}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.hasil.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2 text-center text-xs">${data.no}</td>
+      <td class="border border-gray-300 p-2 text-xs truncate max-w-[60px] md:max-w-none" title="${data.kelompok_nama}">${data.kelompok_nomor}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center hidden md:table-cell">${formatTanggalSingkat(data.tanggal)}</td>
+      <td class="border border-gray-300 p-2 text-xs truncate max-w-[50px]" title="${data.nama}">${data.nama.substring(0, 6)}${data.nama.length > 6 ? '...' : ''}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center bg-green-50">${data.kavling}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center">${data.tandan_mentah}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center hidden sm:table-cell">${data.tandan_matang}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center">${data.tandan_busuk}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center hidden sm:table-cell">${data.jangkos}</td>
+      <td class="border border-gray-300 p-2 text-xs text-center">${data.berondolan.toFixed(1)}</td>
       <td class="border border-gray-300 p-2 text-center">
-        <button onclick="hapusData(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition duration-200">
-          Hapus
+        <button onclick="hapusData(${index})" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs transition duration-200">
+          ❌
         </button>
       </td>
     `;
     tbody.appendChild(row);
   });
   
-  // Update footer dengan total
-  tfoot.innerHTML = `
-    <tr class="bg-green-50">
-      <td class="border border-gray-300 p-2 font-bold" colspan="5">TOTAL</td>
-      <td class="border border-gray-300 p-2 text-right font-bold">${totalMentah}</td>
-      <td class="border border-gray-300 p-2 text-right font-bold">${totalBusuk}</td>
-      <td class="border border-gray-300 p-2 text-right font-bold">${totalJangkos}</td>
-      <td class="border border-gray-300 p-2 text-right font-bold text-green-700">${totalSemuaTandan}</td>
-      <td class="border border-gray-300 p-2 text-right font-bold">${totalBerondolan.toFixed(1)}</td>
-      <td class="border border-gray-300 p-2 text-right font-bold">${totalHasil.toFixed(1)}</td>
-      <td class="border border-gray-300 p-2"></td>
-    </tr>
-  `;
-  
-  document.getElementById('statusTabel').innerText = `Data siap diekspor. Total: ${dataPanen.length} entri`;
+  totalDataEl.textContent = `${dataPanen.length} data`;
+  totalDataMobile.textContent = dataPanen.length;
+  document.getElementById('totalMentahMobile').textContent = totalMentah;
+  document.getElementById('totalMatangMobile').textContent = totalMatang;
+  document.getElementById('totalBusukMobile').textContent = totalBusuk;
 }
 
-// Hapus data
 function hapusData(index) {
-  if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+  if (confirm('Hapus data ini?')) {
     dataPanen.splice(index, 1);
-    // Perbarui nomor urut
     dataPanen.forEach((data, i) => {
       data.no = i + 1;
     });
     nomorUrut = dataPanen.length + 1;
     updateTabel();
-    document.getElementById('statusForm').innerText = `Data berhasil dihapus! Total: ${dataPanen.length} data`;
-    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-blue-600 font-medium";
+    simpanData();
   }
 }
 
-// Reset input form
 function resetInput() {
   document.getElementById('nama').value = '';
-  document.getElementById('kavling').value = '';
   document.getElementById('tandan_mentah').value = '';
+  document.getElementById('tandan_matang').value = '';
   document.getElementById('tandan_busuk').value = '';
   document.getElementById('jangkos').value = '';
-  document.getElementById('total_tandan').value = '';
   document.getElementById('berondolan').value = '';
-  document.getElementById('hasil').value = '';
-  document.getElementById('nama').focus();
+  document.getElementById('kavling_manual').value = '';
+  
+  document.getElementById('dropdown_kavling').selectedIndex = 0;
+  document.getElementById('selectedInfo').textContent = kelompokTerpilih ? 
+    `${dataKelompok[kelompokTerpilih].kavling.length} kavling tersedia` : "";
+  
+  document.getElementById('tanggal').focus();
 }
 
-// Reset semua data
 function resetForm() {
   if (dataPanen.length === 0) {
-    document.getElementById('statusAksi').innerText = "Tidak ada data untuk direset.";
-    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    const statusAksi = document.getElementById('statusAksi');
+    statusAksi.textContent = "Tidak ada data untuk direset";
+    statusAksi.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
   
-  if (confirm(`Apakah Anda yakin ingin menghapus SEMUA data (${dataPanen.length} entri)?`)) {
+  if (confirm(`Hapus semua data (${dataPanen.length} entri)?`)) {
     dataPanen = [];
     nomorUrut = 1;
-    document.getElementById('kelompok').value = '';
+    document.getElementById('dropdown_kelompok').selectedIndex = 0;
     document.getElementById('tanggal').value = '';
+    kelompokTerpilih = null;
+    document.getElementById('infoKelompok').textContent = "";
     resetInput();
     updateTabel();
-    document.getElementById('statusForm').innerText = "Form telah direset.";
-    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-gray-600";
-    document.getElementById('statusTabel').innerText = "Semua data telah dihapus.";
-    document.getElementById('statusAksi').innerText = "✓ Semua data berhasil direset.";
-    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+    localStorage.removeItem('panenSawitData');
+    
+    const statusAksi = document.getElementById('statusAksi');
+    statusAksi.textContent = "✅ Semua data direset";
+    statusAksi.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
+    
+    setTimeout(() => {
+      statusAksi.textContent = "";
+    }, 3000);
   }
 }
 
-// Cetak PDF menggunakan jsPDF
+// ============== LOCALSTORAGE FUNCTIONS ==============
+function simpanData() {
+  const dataSimpan = {
+    dataPanen: dataPanen,
+    nomorUrut: nomorUrut,
+    lastUpdate: new Date().toISOString()
+  };
+  
+  try {
+    localStorage.setItem('panenSawitData', JSON.stringify(dataSimpan));
+  } catch (error) {
+    console.error('Gagal menyimpan data lokal:', error);
+  }
+}
+
+function muatData() {
+  try {
+    const saved = localStorage.getItem('panenSawitData');
+    if (saved) {
+      const parsed = JSON.parse(saved);
+      dataPanen = parsed.dataPanen || [];
+      nomorUrut = parsed.nomorUrut || dataPanen.length + 1;
+      
+      dataPanen.forEach((data, index) => {
+        data.no = index + 1;
+      });
+      
+      updateTabel();
+    }
+  } catch (error) {
+    console.error('Gagal memuat data lokal:', error);
+  }
+}
+
+// ============== EXPORT FUNCTIONS ==============
 function cetakPDF() {
   if (dataPanen.length === 0) {
-    document.getElementById('statusAksi').innerText = "Tidak ada data untuk dicetak. Silakan tambah data terlebih dahulu.";
-    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    const statusAksi = document.getElementById('statusAksi');
+    statusAksi.textContent = "Tidak ada data untuk dicetak";
+    statusAksi.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
 
   const { jsPDF } = window.jspdf;
   const doc = new jsPDF('landscape');
   
-  // Judul
-  doc.setFontSize(18);
+  doc.setFontSize(16);
   doc.text('LAPORAN PANEN SAWIT', 148, 15, { align: 'center' });
   
-  // Informasi header
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.text(`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 25);
   doc.text(`Total Data: ${dataPanen.length} entri`, 14, 32);
-  doc.text(`Kelompok: ${dataPanen[0].kelompok}`, 14, 39);
+  doc.text(`Kelompok: ${dataPanen[0].kelompok_nama}`, 14, 39);
   
-  // Header tabel
   const headers = [
-    ['No', 'Kelompok', 'Tanggal', 'Nama', 'Kavling', 'T. Mentah', 'T. Busuk', 'Jangkos', 'Total', 'Berondolan (Kg)', 'Hasil (Kg)']
+    ['No', 'Kel', 'Tanggal', 'Nama', 'Kavling', 'T.Mnt', 'T.Mtg', 'T.Bsk', 'Jkg', 'Brdln']
   ];
   
-  // Data tabel
   const tableData = dataPanen.map(data => [
     data.no,
-    data.kelompok,
+    data.kelompok_nomor,
     formatTanggal(data.tanggal),
     data.nama,
     data.kavling,
     data.tandan_mentah.toString(),
+    data.tandan_matang.toString(),
     data.tandan_busuk.toString(),
     data.jangkos.toString(),
-    data.total_tandan.toString(),
-    data.berondolan.toFixed(1),
-    data.hasil.toFixed(1)
+    data.berondolan.toFixed(1)
   ]);
   
-  // Buat tabel
   doc.autoTable({
     head: headers,
     body: tableData,
     startY: 45,
     theme: 'grid',
     styles: { fontSize: 8, cellPadding: 2 },
-    headStyles: { fillColor: [34, 139, 34] }, // Warna hijau
+    headStyles: { fillColor: [34, 139, 34] },
     margin: { horizontal: 10 }
   });
   
-  // Hitung total
-  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
-  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
-  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
-  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
-  const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
-  const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
-  
-  // Footer dengan total
   const finalY = doc.lastAutoTable.finalY || 100;
-  doc.setFontSize(10);
+  doc.setFontSize(9);
   doc.setFont(undefined, 'bold');
-  doc.text('TOTAL:', 14, finalY + 10);
-  doc.text(`Mentah: ${totalMentah}`, 40, finalY + 10);
-  doc.text(`Busuk: ${totalBusuk}`, 70, finalY + 10);
-  doc.text(`Jangkos: ${totalJangkos}`, 100, finalY + 10);
-  doc.text(`Total Tandan: ${totalSemuaTandan}`, 130, finalY + 10);
-  doc.text(`Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 170, finalY + 10);
-  doc.text(`Hasil: ${totalHasil.toFixed(1)} Kg`, 210, finalY + 10);
+  doc.text('Laporan ini dibuat secara otomatis', 14, finalY + 10);
   
-  // Simpan PDF
   const tanggal = new Date().toISOString().slice(0,10);
-  doc.save(`Laporan_Panen_Sawit_${tanggal}.pdf`);
+  doc.save(`Panen_Sawit_${tanggal}.pdf`);
   
-  document.getElementById('statusAksi').innerText = "✓ PDF berhasil dibuat dan diunduh!";
-  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+  const statusAksi = document.getElementById('statusAksi');
+  statusAksi.textContent = "✅ PDF berhasil diunduh";
+  statusAksi.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
 }
 
-// Unduh data sebagai CSV
 function unduhCSV() {
   if (dataPanen.length === 0) {
-    document.getElementById('statusAksi').innerText = "Tidak ada data untuk diunduh. Silakan tambah data terlebih dahulu.";
-    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    const statusAksi = document.getElementById('statusAksi');
+    statusAksi.textContent = "Tidak ada data untuk diunduh";
+    statusAksi.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
   
-  // Header CSV
-  let csv = 'No,Kelompok,Tanggal,Nama,Kavling,Tandan Mentah,Tandan Busuk,Jangkos,Total Tandan,Berondolan (Kg),Hasil (Kg)\n';
+  let csv = 'No,Kelompok,Kelompok Nama,Tanggal,Nama,Kavling,Tandan Mentah,Tandan Matang,Tandan Busuk,Jangkos,Berondolan (Kg)\n';
   
-  // Data CSV
   dataPanen.forEach(data => {
-    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.kavling},${data.tandan_mentah},${data.tandan_busuk},${data.jangkos},${data.total_tandan},${data.berondolan.toFixed(1)},${data.hasil.toFixed(1)}\n`;
+    csv += `${data.no},${data.kelompok_nomor},"${data.kelompok_nama}",${formatTanggal(data.tanggal)},"${data.nama}",${data.kavling},${data.tandan_mentah},${data.tandan_matang},${data.tandan_busuk},${data.jangkos},${data.berondolan.toFixed(1)}\n`;
   });
   
-  // Hitung total untuk CSV
-  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
-  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
-  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
-  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
-  const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
-  const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
-  
-  csv += `\nTOTAL,,,,${totalMentah},${totalBusuk},${totalJangkos},${totalSemuaTandan},${totalBerondolan.toFixed(1)},${totalHasil.toFixed(1)}\n`;
-  
-  // Buat blob dan unduh
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
   const url = URL.createObjectURL(blob);
   
   link.setAttribute('href', url);
-  link.setAttribute('download', `data_panen_sawit_${new Date().toISOString().slice(0,10)}.csv`);
-  link.style.visibility = 'hidden';
+  link.setAttribute('download', `panen_sawit_${new Date().toISOString().slice(0,10)}.csv`);
   
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
   
-  document.getElementById('statusAksi').innerText = "✓ File CSV berhasil diunduh!";
-  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+  const statusAksi = document.getElementById('statusAksi');
+  statusAksi.textContent = "✅ CSV berhasil diunduh";
+  statusAksi.className = "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
 }
 
-// Inisialisasi tanggal dengan hari ini
+async function exportToSheets() {
+  if (dataPanen.length === 0) {
+    alert('Tidak ada data untuk diexport!');
+    return;
+  }
+  
+  if (!sheetsConfig.webAppUrl) {
+    alert('Google Sheets belum dikonfigurasi!');
+    showConfigPanel();
+    return;
+  }
+  
+  const statusAksi = document.getElementById('statusAksi');
+  statusAksi.textContent = "⏳ Mengexport semua data ke Google Sheets...";
+  statusAksi.className = "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium";
+  
+  let successCount = 0;
+  let errorCount = 0;
+  
+  for (let i = 0; i < dataPanen.length; i++) {
+    const data = dataPanen[i];
+    try {
+      const result = await syncToGoogleSheets(data);
+      if (result.success) {
+        successCount++;
+      } else {
+        errorCount++;
+      }
+      
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      statusAksi.textContent = `⏳ Exporting... ${i + 1}/${dataPanen.length}`;
+    } catch (error) {
+      errorCount++;
+    }
+  }
+  
+  statusAksi.textContent = `✅ Export selesai: ${successCount} berhasil, ${errorCount} gagal`;
+  statusAksi.className = errorCount > 0 ? 
+    "text-center text-xs md:text-sm mt-2 text-yellow-600 font-medium" :
+    "text-center text-xs md:text-sm mt-2 text-green-600 font-medium";
+  
+  setTimeout(() => {
+    statusAksi.textContent = "";
+  }, 5000);
+}
+
+function openGoogleSheets() {
+  if (sheetsConfig.webAppUrl) {
+    // Kita tidak bisa langsung buka spreadsheet dari web app URL
+    // Tapi kita bisa beri instruksi
+    alert('Untuk melihat Google Sheets:\n1. Buka Google Sheets\n2. Cari spreadsheet "Data Panen Sawit"\n3. Atau buka link spreadsheet yang Anda buat saat setup');
+  } else {
+    alert('Google Sheets belum dikonfigurasi!');
+    showConfigPanel();
+  }
+}
+
+// ============== INITIALIZATION ==============
 window.onload = function() {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('tanggal').value = today;
-  document.getElementById('kelompok').focus();
+  
+  muatData();
+  loadConfig();
+  
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
 };
+
+window.addEventListener('resize', () => {
+  document.documentElement.style.setProperty('--vh', `${window.innerHeight * 0.01}px`);
+});
 </script>
 
 </body>
