@@ -10,14 +10,14 @@
 </head>
 <body class="bg-gray-100 p-4">
 
-<div class="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-6">
+<div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
   <h1 class="text-2xl font-bold text-center text-green-800 mb-2">Form Panen Sawit</h1>
   <p class="text-center text-gray-600 mb-6">Input data panen sawit dan ekspor ke PDF/CSV</p>
 
   <!-- Form Input -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
     <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pengurus Kelompok</label>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelompok Tani</label>
       <input id="kelompok" placeholder="Contoh: Kelompok Tani Maju Jaya" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
     </div>
     <div>
@@ -32,25 +32,47 @@
       <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Kavling</label>
       <input id="kavling" placeholder="Contoh: KAV-001" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
     </div>
-    <div>
-      <label class="block text-sm font-medium text-gray-700 mb-1">Jumlah Tandan</label>
-      <input id="tandan" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    
+    <!-- Kolom Tandan -->
+    <div class="md:col-span-2">
+      <h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Jenis Tandan</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Mentah</label>
+          <input id="tandan_mentah" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Busuk</label>
+          <input id="tandan_busuk" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Jangkos</label>
+          <input id="jangkos" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Total Tandan</label>
+          <input id="total_tandan" type="number" placeholder="0" class="w-full border border-gray-300 p-3 rounded-lg bg-gray-50" readonly>
+        </div>
+      </div>
     </div>
+    
+    <!-- Berondolan dan Hasil -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Berondolan (Kg)</label>
       <input id="berondolan" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
     </div>
-    <div class="md:col-span-2">
+    <div>
       <label class="block text-sm font-medium text-gray-700 mb-1">Hasil Tandan (Kg)</label>
       <input id="hasil" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
     </div>
   </div>
 
-  <!-- Tombol Aksi -->
-  <div class="flex flex-col md:flex-row gap-3 mb-6">
-    <button onclick="tambahData()" class="flex-1 bg-green-600 hover:bg-green-700 text-white p-3 rounded-lg font-semibold transition duration-200">
-      + Tambah ke Daftar
+  <!-- Tombol Tambah ke Daftar -->
+  <div class="mb-8">
+    <button onclick="tambahData()" class="w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold text-lg transition duration-200 flex items-center justify-center gap-2">
+      <span class="text-xl">+</span> Tambah ke Daftar
     </button>
+    <p id="statusForm" class="text-center text-sm mt-2 text-gray-600"></p>
   </div>
 
   <!-- Daftar Data -->
@@ -65,7 +87,10 @@
             <th class="border border-gray-300 p-2 text-left">Tanggal</th>
             <th class="border border-gray-300 p-2 text-left">Nama</th>
             <th class="border border-gray-300 p-2 text-left">Kavling</th>
-            <th class="border border-gray-300 p-2 text-left">Tandan</th>
+            <th class="border border-gray-300 p-2 text-left">T. Mentah</th>
+            <th class="border border-gray-300 p-2 text-left">T. Busuk</th>
+            <th class="border border-gray-300 p-2 text-left">Jangkos</th>
+            <th class="border border-gray-300 p-2 text-left">Total Tandan</th>
             <th class="border border-gray-300 p-2 text-left">Berondolan (Kg)</th>
             <th class="border border-gray-300 p-2 text-left">Hasil (Kg)</th>
             <th class="border border-gray-300 p-2 text-left">Aksi</th>
@@ -74,22 +99,30 @@
         <tbody id="tabelBody">
           <!-- Data akan ditampilkan di sini -->
         </tbody>
+        <!-- Footer untuk Total -->
+        <tfoot id="tabelFooter" class="bg-gray-50 font-semibold">
+          <!-- Total akan dihitung otomatis -->
+        </tfoot>
       </table>
     </div>
-    <p id="status" class="text-center text-sm mt-3 text-gray-600"></p>
+    <p id="statusTabel" class="text-center text-sm mt-3 text-gray-600"></p>
   </div>
 
-    <!-- Tombol Aksi -->
-  <div class="flex flex-col md:flex-row gap-3 mb-6">
-    <button onclick="cetakPDF()" class="flex-1 bg-red-600 hover:bg-red-700 text-white p-3 rounded-lg font-semibold transition duration-200">
-      📄 Cetak PDF
-    </button>
-    <button onclick="unduhCSV()" class="flex-1 bg-blue-600 hover:bg-blue-700 text-white p-3 rounded-lg font-semibold transition duration-200">
-      📊 Unduh CSV
-    </button>
-    <button onclick="resetForm()" class="flex-1 bg-gray-600 hover:bg-gray-700 text-white p-3 rounded-lg font-semibold transition duration-200">
-      🔄 Reset Form
-    </button>
+  <!-- Tombol Aksi -->
+  <div class="mb-8">
+    <h3 class="text-lg font-bold text-gray-800 mb-3">Ekspor Data</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <button onclick="cetakPDF()" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">📄</span> Cetak PDF
+      </button>
+      <button onclick="unduhCSV()" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">📊</span> Unduh CSV
+      </button>
+      <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">🔄</span> Reset Form
+      </button>
+    </div>
+    <p id="statusAksi" class="text-center text-sm mt-2 text-gray-600"></p>
   </div>
 
   <!-- Informasi -->
@@ -97,11 +130,10 @@
     <h3 class="font-bold text-gray-700 mb-2">Cara Menggunakan:</h3>
     <ol class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
       <li>Isi semua data pada form di atas</li>
-      <li>Klik "Tambah ke Daftar" untuk menyimpan data sementara</li>
-      <li>Data akan muncul di tabel bawah</li>
-      <li>Klik "Cetak PDF" untuk membuat file PDF</li>
-      <li>Klik "Unduh CSV" untuk membuat file Excel/CSV</li>
-      <li>Klik "Reset Form" untuk menghapus semua data</li>
+      <li><strong>Total Tandan</strong> akan dihitung otomatis dari jumlah Tandan Mentah, Tandan Busuk, dan Jangkos</li>
+      <li>Klik <strong>"Tambah ke Daftar"</strong> untuk menyimpan data sementara</li>
+      <li>Data akan muncul di tabel dengan total keseluruhan di bagian bawah</li>
+      <li>Pilih opsi ekspor di bawah tabel untuk membuat PDF atau CSV</li>
     </ol>
   </div>
 </div>
@@ -110,6 +142,16 @@
 // Array untuk menyimpan data sementara
 let dataPanen = [];
 let nomorUrut = 1;
+
+// Hitung total tandan secara otomatis
+function hitungTotalTandan() {
+  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
+  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
+  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
+  const total = tandanMentah + tandanBusuk + jangkos;
+  
+  document.getElementById('total_tandan').value = total;
+}
 
 // Format tanggal ke Indonesia
 function formatTanggal(tanggal) {
@@ -137,13 +179,21 @@ function validasiInput(data) {
 
 // Tambah data ke tabel
 function tambahData() {
+  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
+  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
+  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
+  const totalTandan = tandanMentah + tandanBusuk + jangkos;
+  
   const data = {
     no: nomorUrut,
     kelompok: document.getElementById('kelompok').value.trim(),
     tanggal: document.getElementById('tanggal').value,
     nama: document.getElementById('nama').value.trim(),
     kavling: document.getElementById('kavling').value.trim(),
-    tandan: parseInt(document.getElementById('tandan').value) || 0,
+    tandan_mentah: tandanMentah,
+    tandan_busuk: tandanBusuk,
+    jangkos: jangkos,
+    total_tandan: totalTandan,
     berondolan: parseFloat(document.getElementById('berondolan').value) || 0,
     hasil: parseFloat(document.getElementById('hasil').value) || 0
   };
@@ -155,26 +205,45 @@ function tambahData() {
   
   updateTabel();
   resetInput();
-  document.getElementById('status').innerText = `Data berhasil ditambahkan! Total: ${dataPanen.length} data`;
+  document.getElementById('statusForm').innerText = `✓ Data berhasil ditambahkan! Total: ${dataPanen.length} data`;
+  document.getElementById('statusForm').className = "text-center text-sm mt-2 text-green-600 font-medium";
 }
 
 // Update tabel tampilan
 function updateTabel() {
   const tbody = document.getElementById('tabelBody');
+  const tfoot = document.getElementById('tabelFooter');
   tbody.innerHTML = '';
   
   if (dataPanen.length === 0) {
     tbody.innerHTML = `
       <tr>
-        <td colspan="9" class="border border-gray-300 p-4 text-center text-gray-500">
+        <td colspan="12" class="border border-gray-300 p-4 text-center text-gray-500">
           Belum ada data. Silakan tambah data terlebih dahulu.
         </td>
       </tr>
     `;
+    tfoot.innerHTML = '';
+    document.getElementById('statusTabel').innerText = "Tabel kosong. Tambah data untuk memulai.";
     return;
   }
   
+  // Hitung total keseluruhan
+  let totalMentah = 0;
+  let totalBusuk = 0;
+  let totalJangkos = 0;
+  let totalSemuaTandan = 0;
+  let totalBerondolan = 0;
+  let totalHasil = 0;
+  
   dataPanen.forEach((data, index) => {
+    totalMentah += data.tandan_mentah;
+    totalBusuk += data.tandan_busuk;
+    totalJangkos += data.jangkos;
+    totalSemuaTandan += data.total_tandan;
+    totalBerondolan += data.berondolan;
+    totalHasil += data.hasil;
+    
     const row = document.createElement('tr');
     row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
     row.innerHTML = `
@@ -183,17 +252,36 @@ function updateTabel() {
       <td class="border border-gray-300 p-2">${formatTanggal(data.tanggal)}</td>
       <td class="border border-gray-300 p-2">${data.nama}</td>
       <td class="border border-gray-300 p-2">${data.kavling}</td>
-      <td class="border border-gray-300 p-2 text-right">${data.tandan}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.tandan_mentah}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.tandan_busuk}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.jangkos}</td>
+      <td class="border border-gray-300 p-2 text-right font-semibold">${data.total_tandan}</td>
       <td class="border border-gray-300 p-2 text-right">${data.berondolan.toFixed(1)}</td>
       <td class="border border-gray-300 p-2 text-right">${data.hasil.toFixed(1)}</td>
       <td class="border border-gray-300 p-2 text-center">
-        <button onclick="hapusData(${index})" class="bg-red-500 text-white px-2 py-1 rounded text-sm hover:bg-red-600">
+        <button onclick="hapusData(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition duration-200">
           Hapus
         </button>
       </td>
     `;
     tbody.appendChild(row);
   });
+  
+  // Update footer dengan total
+  tfoot.innerHTML = `
+    <tr class="bg-green-50">
+      <td class="border border-gray-300 p-2 font-bold" colspan="5">TOTAL</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalMentah}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalBusuk}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalJangkos}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold text-green-700">${totalSemuaTandan}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalBerondolan.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalHasil.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2"></td>
+    </tr>
+  `;
+  
+  document.getElementById('statusTabel').innerText = `Data siap diekspor. Total: ${dataPanen.length} entri`;
 }
 
 // Hapus data
@@ -206,7 +294,8 @@ function hapusData(index) {
     });
     nomorUrut = dataPanen.length + 1;
     updateTabel();
-    document.getElementById('status').innerText = `Data berhasil dihapus! Total: ${dataPanen.length} data`;
+    document.getElementById('statusForm').innerText = `Data berhasil dihapus! Total: ${dataPanen.length} data`;
+    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-blue-600 font-medium";
   }
 }
 
@@ -214,7 +303,10 @@ function hapusData(index) {
 function resetInput() {
   document.getElementById('nama').value = '';
   document.getElementById('kavling').value = '';
-  document.getElementById('tandan').value = '';
+  document.getElementById('tandan_mentah').value = '';
+  document.getElementById('tandan_busuk').value = '';
+  document.getElementById('jangkos').value = '';
+  document.getElementById('total_tandan').value = '';
   document.getElementById('berondolan').value = '';
   document.getElementById('hasil').value = '';
   document.getElementById('nama').focus();
@@ -223,42 +315,51 @@ function resetInput() {
 // Reset semua data
 function resetForm() {
   if (dataPanen.length === 0) {
-    alert('Tidak ada data untuk direset.');
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk direset.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
   
-  if (confirm('Apakah Anda yakin ingin menghapus SEMUA data?')) {
+  if (confirm(`Apakah Anda yakin ingin menghapus SEMUA data (${dataPanen.length} entri)?`)) {
     dataPanen = [];
     nomorUrut = 1;
     document.getElementById('kelompok').value = '';
     document.getElementById('tanggal').value = '';
     resetInput();
     updateTabel();
-    document.getElementById('status').innerText = 'Semua data telah dihapus.';
+    document.getElementById('statusForm').innerText = "Form telah direset.";
+    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-gray-600";
+    document.getElementById('statusTabel').innerText = "Semua data telah dihapus.";
+    document.getElementById('statusAksi').innerText = "✓ Semua data berhasil direset.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
   }
 }
 
 // Cetak PDF menggunakan jsPDF
 function cetakPDF() {
   if (dataPanen.length === 0) {
-    alert('Tidak ada data untuk dicetak. Silakan tambah data terlebih dahulu.');
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk dicetak. Silakan tambah data terlebih dahulu.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
 
   const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
+  const doc = new jsPDF('landscape');
   
   // Judul
   doc.setFontSize(18);
-  doc.text('LAPORAN PANEN SAWIT', 105, 15, { align: 'center' });
+  doc.text('LAPORAN PANEN SAWIT', 148, 15, { align: 'center' });
   
   // Informasi header
   doc.setFontSize(10);
   doc.text(`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 25);
   doc.text(`Total Data: ${dataPanen.length} entri`, 14, 32);
+  doc.text(`Kelompok: ${dataPanen[0].kelompok}`, 14, 39);
   
   // Header tabel
-  const headers = [['No', 'Kelompok', 'Tanggal', 'Nama', 'Kavling', 'Tandan', 'Berondolan (Kg)', 'Hasil (Kg)']];
+  const headers = [
+    ['No', 'Kelompok', 'Tanggal', 'Nama', 'Kavling', 'T. Mentah', 'T. Busuk', 'Jangkos', 'Total', 'Berondolan (Kg)', 'Hasil (Kg)']
+  ];
   
   // Data tabel
   const tableData = dataPanen.map(data => [
@@ -267,7 +368,10 @@ function cetakPDF() {
     formatTanggal(data.tanggal),
     data.nama,
     data.kavling,
-    data.tandan.toString(),
+    data.tandan_mentah.toString(),
+    data.tandan_busuk.toString(),
+    data.jangkos.toString(),
+    data.total_tandan.toString(),
     data.berondolan.toFixed(1),
     data.hasil.toFixed(1)
   ]);
@@ -276,52 +380,66 @@ function cetakPDF() {
   doc.autoTable({
     head: headers,
     body: tableData,
-    startY: 40,
+    startY: 45,
     theme: 'grid',
-    styles: { fontSize: 9, cellPadding: 3 },
-    headStyles: { fillColor: [34, 139, 34] } // Warna hijau
+    styles: { fontSize: 8, cellPadding: 2 },
+    headStyles: { fillColor: [34, 139, 34] }, // Warna hijau
+    margin: { horizontal: 10 }
   });
   
   // Hitung total
-  const totalTandan = dataPanen.reduce((sum, data) => sum + data.tandan, 0);
+  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
+  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
+  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
+  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
   const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
   const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
   
   // Footer dengan total
   const finalY = doc.lastAutoTable.finalY || 100;
   doc.setFontSize(10);
-  doc.text(`Total Tandan: ${totalTandan}`, 14, finalY + 10);
-  doc.text(`Total Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 14, finalY + 17);
-  doc.text(`Total Hasil: ${totalHasil.toFixed(1)} Kg`, 14, finalY + 24);
+  doc.setFont(undefined, 'bold');
+  doc.text('TOTAL:', 14, finalY + 10);
+  doc.text(`Mentah: ${totalMentah}`, 40, finalY + 10);
+  doc.text(`Busuk: ${totalBusuk}`, 70, finalY + 10);
+  doc.text(`Jangkos: ${totalJangkos}`, 100, finalY + 10);
+  doc.text(`Total Tandan: ${totalSemuaTandan}`, 130, finalY + 10);
+  doc.text(`Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 170, finalY + 10);
+  doc.text(`Hasil: ${totalHasil.toFixed(1)} Kg`, 210, finalY + 10);
   
   // Simpan PDF
   const tanggal = new Date().toISOString().slice(0,10);
   doc.save(`Laporan_Panen_Sawit_${tanggal}.pdf`);
   
-  document.getElementById('status').innerText = 'PDF berhasil dibuat dan diunduh!';
+  document.getElementById('statusAksi').innerText = "✓ PDF berhasil dibuat dan diunduh!";
+  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
 }
 
 // Unduh data sebagai CSV
 function unduhCSV() {
   if (dataPanen.length === 0) {
-    alert('Tidak ada data untuk diunduh. Silakan tambah data terlebih dahulu.');
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk diunduh. Silakan tambah data terlebih dahulu.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
     return;
   }
   
   // Header CSV
-  let csv = 'No,Kelompok,Tanggal,Nama,Kavling,Tandan,Berondolan (Kg),Hasil (Kg)\n';
+  let csv = 'No,Kelompok,Tanggal,Nama,Kavling,Tandan Mentah,Tandan Busuk,Jangkos,Total Tandan,Berondolan (Kg),Hasil (Kg)\n';
   
   // Data CSV
   dataPanen.forEach(data => {
-    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.kavling},${data.tandan},${data.berondolan},${data.hasil}\n`;
+    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.kavling},${data.tandan_mentah},${data.tandan_busuk},${data.jangkos},${data.total_tandan},${data.berondolan.toFixed(1)},${data.hasil.toFixed(1)}\n`;
   });
   
-  // Hitung total
-  const totalTandan = dataPanen.reduce((sum, data) => sum + data.tandan, 0);
+  // Hitung total untuk CSV
+  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
+  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
+  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
+  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
   const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
   const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
   
-  csv += `\nTOTAL,,,Total,,${totalTandan},${totalBerondolan.toFixed(1)},${totalHasil.toFixed(1)}\n`;
+  csv += `\nTOTAL,,,,${totalMentah},${totalBusuk},${totalJangkos},${totalSemuaTandan},${totalBerondolan.toFixed(1)},${totalHasil.toFixed(1)}\n`;
   
   // Buat blob dan unduh
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
@@ -336,7 +454,8 @@ function unduhCSV() {
   link.click();
   document.body.removeChild(link);
   
-  document.getElementById('status').innerText = 'File CSV berhasil diunduh!';
+  document.getElementById('statusAksi').innerText = "✓ File CSV berhasil diunduh!";
+  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
 }
 
 // Inisialisasi tanggal dengan hari ini
