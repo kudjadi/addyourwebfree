@@ -1,170 +1,536 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
-  <meta http-equiv="content-type" content="text/html; charset=utf-8">
-  <title>ADD YOUR WEBSITE TO 10 HIGH DA/DR SITES</title>
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" crossorigin="anonymous">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" crossorigin="anonymous"></script>
-  <link href='https://add-your-website.pages.dev/favicon.ico' rel='icon' type='image/x-icon'/>
-	
-  <style>
-  .a, a {color: black; line-height: 3em; text-transform: uppercase; font-size: 16px;} .a:hover, a:hover {text-decoration: none; color: #0723e9;}
-.container, container {max-width: 940px;}  
-body {
-    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
-    font-size: 18px;
-    line-height: 2em;
-    color: #333;
-    background-color: #fff;
-}
-
-.table, table {
-    background-color: transparent;
-    text-align: justify;
-    width: 100%;
-	margin-bottom: 50px;
-
-}
-
-td, th {
-    padding-bottom: 25px;
-	font-size: 16px;
-}
-
-
-.topheadbar {
-    margin-top: 20px;
-    margin-bottom: 40px;
-    background: #ffffff;
-    border: 1px solid #d5d5d5;
-    width: auto;
-    height: 50px;
-    border-radius: 7px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-    color: black !important;
-}
-
-
-.contactbutton {
-    font-size: 15px;
-    font-weight: bold;
-    float: right;
-    color: black !important;
-    line-height: 1.8em;
-    border: 1px solid #bbbbbb;
-    padding: 0px 8px;
-    border-radius: 7px;
-}
-
-.container {
-    padding-right: 25px;
-    padding-left: 10px;
-    margin-right: auto;
-    margin-left: auto;
-}
-
-.toptitle {
-    text-align: center;
-    font-size: 26px;
-    font-weight: 600;
-    border-bottom: 1px solid gainsboro;
-    margin-bottom: 26px;
-    padding-bottom: 14px;
-    max-width: 100%;
-}
-
-
-  </style>
-  
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Form Panen Sawit - Cetak PDF & CSV</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
 </head>
-<body>
+<body class="bg-gray-100 p-4">
 
-<div style="background: white;border: 1px solid #dfdfdf;margin-top: 20px; border-top: 5px solid #fa046d;" class='container'>
+<div class="max-w-5xl mx-auto bg-white rounded-xl shadow-lg p-6">
+  <h1 class="text-2xl font-bold text-center text-green-800 mb-2">Form Panen Sawit</h1>
+  <p class="text-center text-gray-600 mb-6">Input data panen sawit dan ekspor ke PDF/CSV</p>
 
-
-<div class='container topheadbar'>
-
-
-<h1 style="float:left;font-size: 24px;margin-top: 0;">
-<a href="/index" style="color: black !important;line-height: 1.5em;font-size: 22px;font-style: italic;">WEB DIRECTORY</a></h1>
-</div>
-<div class="container" style="
-    text-align: center;
-    max-width: 100%;
-">
-
-</div>
-
-  <div class='container' style="padding-bottom: 10px;">
+  <!-- Form Input -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Kelompok Tani</label>
+      <input id="kelompok" placeholder="Contoh: Kelompok Tani Maju Jaya" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Tanggal Panen</label>
+      <input id="tanggal" type="date" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Nama Pemanen</label>
+      <input id="nama" placeholder="Nama lengkap pemanen" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    </div>
     
+    <!-- Kolom Kavling dan Radio -->
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Nomor Kavling</label>
+      <div class="flex gap-4">
+        <!-- Input Kavling -->
+        <div class="flex-1">
+          <input id="kavling" placeholder="Contoh: KAV-001" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+        </div>
+        
+        <!-- Radio Button Group -->
+        <div class="flex-1">
+          <div class="border border-gray-300 rounded-lg p-3">
+            <p class="text-xs font-medium text-gray-600 mb-2">Pilih Nomor (37-48):</p>
+            <div class="grid grid-cols-6 gap-2">
+              <!-- Radio buttons akan dibuat dinamis oleh JavaScript -->
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="selectedRadio" class="text-sm text-green-600 font-medium mt-1"></div>
+    </div>
+    
+    <!-- Kolom Tandan -->
+    <div class="md:col-span-2">
+      <h3 class="font-bold text-gray-700 mb-2 border-b pb-1">Jenis Tandan</h3>
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Mentah</label>
+          <input id="tandan_mentah" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Tandan Busuk</label>
+          <input id="tandan_busuk" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Jangkos</label>
+          <input id="jangkos" type="number" placeholder="0" min="0" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" oninput="hitungTotalTandan()">
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Total Tandan</label>
+          <input id="total_tandan" type="number" placeholder="0" class="w-full border border-gray-300 p-3 rounded-lg bg-gray-50" readonly>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Berondolan dan Hasil -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Berondolan (Kg)</label>
+      <input id="berondolan" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    </div>
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1">Hasil Tandan (Kg)</label>
+      <input id="hasil" type="number" placeholder="0" min="0" step="0.1" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+    </div>
   </div>
 
-
-  <div class='container'>
-
-<!-- TABLE_PLACEHOLDER -->
-
-<h2 class="toptitle">🔥 ADD YOUR WEBSITE TO 10 HIGH DA/DR SITES</h2>
-<p style="
-    text-align: center;
-    font-size: 24px;
-    margin-top: 0px;
-    line-height: 3em;
-">Get 10 HIGH DA/DR Backlinks for Your Website</p>
-
-<p style="text-align: center;max-width: 700px;margin-right: auto;margin-left: auto;">
-    <span>📑 Securing powerful backlinks from high authority domains is your secret weapon for skyrocketing search engine rankings. <a style="
-    color: blue;
-    text-transform: none;
-    font-size: 18px;
-    border-bottom: 2px dashed blue;
-    font-weight: bold;
-    "https://wa.me/6285157515454">High DA Authority Backlinks</a> amplify your website's credibility, drive organic traffic, and supercharge your SEO efforts, putting you ahead of the competition.</span>
-</p>
-
-<div class="separator" style="clear: both;">
-  <a
-    href="https://wa.me/6285157515454"
-    style="border-bottom: none; display: block; padding: 1em 0px; text-align: center;"
-    target="_blank"
-    ><img style="border: 1px solid rgb(199, 199, 199); max-width: 850px;" src="https://add-your-website.pages.dev/DADR90.png"
-  /></a>
-</div>
-
-<p style="
-    text-align: center;
-"><a style="color: #ffffff;font-weight: 600;padding: 12px 13px;background: #46b732;border-radius: 3px;" href="https://wa.me/6285157515454">GET 10 BACKLINKS</a></p>
-
-<p style="text-align: center;line-height: 3em;">We will publish articles with backlinks to your website in 10 HIGH DA/DR Sites.</p>
-<div style="text-align: justify;">Sure, here's a detailed and comprehensive blog article about "Backlinks for Your Website":</div><h2 style="text-align: justify;">Backlinks for Your Website: A Comprehensive Guide</h2><div style="text-align: justify;">In the ever-evolving world of SEO (Search Engine Optimization), backlinks remain a crucial factor in determining your website's authority and ranking on search engines. Understanding what backlinks are, why they matter, and how to effectively build them can significantly impact your website's visibility and success. In this article, we'll delve into the intricacies of backlinks and provide actionable strategies to enhance your backlink profile.</div><h2 style="text-align: justify;">What Are Backlinks?</h2><div style="text-align: justify;">Backlinks, also known as inbound or incoming links, are links from one website to another. They act as a vote of confidence from one site to another, signaling to search engines that the linked content is valuable and trustworthy. Essentially, backlinks are like digital endorsements that can boost your website's credibility and authority.</div><h2 style="text-align: justify;">Why Are Backlinks Important?</h2><div style="text-align: justify;">1. Improved Search Engine Rankings: Search engines like Google use backlinks as a key ranking factor. Websites with a higher number of quality backlinks tend to rank higher in search results.</div><div style="text-align: justify;">2. Increased Organic Traffic: Backlinks can drive referral traffic to your website. When users click on a backlink from another site, they are directed to your content, increasing your site's visibility and potential for conversions.</div><div style="text-align: justify;">3. Enhanced Credibility and Authority: High-quality backlinks from reputable websites signal to search engines that your content is authoritative and trustworthy. This can improve your site's overall domain authority.</div><div style="text-align: justify;">4. Faster Indexing: Backlinks help search engine bots discover and index your website's pages more quickly, ensuring that your content appears in search results sooner.</div><h3 style="text-align: justify;">Types of Backlinks</h3><div style="text-align: justify;">1. Natural Backlinks: These are earned organically when other websites find your content valuable and link to it without any prompting.</div><div style="text-align: justify;">2. Manual Backlinks: These are acquired through deliberate efforts, such as reaching out to other website owners and requesting a link.</div><div style="text-align: justify;">3. Self-Created Backlinks: These are created by adding links to your website on forums, blog comments, or directories. However, be cautious with this approach, as it can sometimes be seen as spammy by search engines.</div><h2 style="text-align: justify;">How to Build Quality Backlinks</h2><div style="text-align: justify;">1. Create High-Quality Content: The foundation of earning backlinks is creating valuable, informative, and engaging content that others want to link to. Focus on producing content that addresses your audience's needs and provides unique insights.</div><div style="text-align: justify;">2. Guest Blogging: Write guest posts for reputable websites in your niche. This not only helps you gain exposure but also allows you to include backlinks to your site within the content.</div><div style="text-align: justify;">3. Outreach and Relationship Building: Reach out to influencers, bloggers, and website owners in your industry. Building relationships can lead to natural backlink opportunities.</div><div style="text-align: justify;">4. Utilize Social Media: Share your content on social media platforms to increase its visibility. When your content is widely shared, it has a higher chance of being linked to by others.</div><div style="text-align: justify;">5. Broken Link Building: Identify broken links on other websites and offer your content as a replacement. This helps the website owner fix their broken links while providing you with a backlink.</div><div style="text-align: justify;">6. Create Infographics and Visual Content: Visual content is highly shareable and can attract backlinks from websites that use your graphics as a resource.</div><h3 style="text-align: justify;">Monitoring and Analyzing Backlinks</h3><div style="text-align: justify;">1. Use SEO Tools: Tools like Ahrefs, Moz, and SEMrush can help you monitor your backlink profile, identify new backlinks, and analyze the quality of your links.</div><div style="text-align: justify;">2. Disavow Toxic Backlinks: Not all backlinks are beneficial. Use Google's Disavow Tool to remove toxic or spammy backlinks that could harm your site's reputation.</div><div style="text-align: justify;">3. Track Referral Traffic: Use Google Analytics to track the traffic generated from your backlinks. This can help you understand which links are driving the most value.</div><h2 style="text-align: justify;">Conclusion</h2><div style="text-align: justify;">Backlinks are a vital component of a successful SEO strategy. By understanding their importance and implementing effective backlink-building techniques, you can enhance your website's authority, improve search engine rankings, and drive more organic traffic. Remember, the key to building quality backlinks lies in creating valuable content and fostering genuine relationships within your industry.</div><div style="text-align: justify;"><br /></div><div style="text-align: justify;">---</div><div style="text-align: justify;"><br /></div><div style="text-align: justify;">I hope this article helps you understand the importance of backlinks and how to effectively build them for your website. If you have any questions or need further assistance, feel free to ask!</div>
-<h3 style="text-align: center;line-height: 3em;">MORE GAMES!</h3>
-<div style="text-align: center;line-height: 1em;">
-<a href="/tetriz.html">TETRIZ</a> | <a href="/block-dude.html">BLOCK DUDE</a> | <a href="/pipeline.html">PIPELINE GAMEZ</a> | 
-</div>
-	  
-<p style="
-    text-align: center;
-    font-weight: 600;
-">Please contact to check the full live link samples!</p>
-
-<p><br /></p>
-<p>Please contact us if you have any questions.</p>
-<p style="font-size: 14px;">Contact: kudjadimandiri@gmail.com</p>
-
-
-<div style="visibility: hidden;"> <img src="https://sidikul.com/">  </div>
-   </div>
+  <!-- Tombol Tambah ke Daftar -->
+  <div class="mb-8">
+    <button onclick="tambahData()" class="w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg font-semibold text-lg transition duration-200 flex items-center justify-center gap-2">
+      <span class="text-xl">+</span> Tambah ke Daftar
+    </button>
+    <p id="statusForm" class="text-center text-sm mt-2 text-gray-600"></p>
   </div>
-    
-<div style="font-size: 15px;background: grey;text-align:center;color:white;padding-top:20px;" class='container'><p>WEB DIRECTORY 2024 - 2025</p>
-<a href="/#">Home</a> - <a href="/about-me.html" title="About Me">About</a> - <a href="/privacy.html" title="Privacy Policy">Privacy Policy</a> - <a href="/disclaimer.html" title="Disclaimer">Disclaimer</a></div>
 
-<div style="visibility: hidden;display: none;">
+  <!-- Daftar Data -->
+  <div class="mb-6">
+    <h2 class="text-lg font-bold text-gray-800 mb-3">Daftar Data Panen</h2>
+    <div class="overflow-x-auto">
+      <table id="tabelData" class="w-full border-collapse border border-gray-300">
+        <thead class="bg-green-100">
+          <tr>
+            <th class="border border-gray-300 p-2 text-left">No</th>
+            <th class="border border-gray-300 p-2 text-left">Kelompok</th>
+            <th class="border border-gray-300 p-2 text-left">Tanggal</th>
+            <th class="border border-gray-300 p-2 text-left">Nama</th>
+            <th class="border border-gray-300 p-2 text-left">Kavling</th>
+            <th class="border border-gray-300 p-2 text-left">Radio No</th>
+            <th class="border border-gray-300 p-2 text-left">T. Mentah</th>
+            <th class="border border-gray-300 p-2 text-left">T. Busuk</th>
+            <th class="border border-gray-300 p-2 text-left">Jangkos</th>
+            <th class="border border-gray-300 p-2 text-left">Total Tandan</th>
+            <th class="border border-gray-300 p-2 text-left">Berondolan (Kg)</th>
+            <th class="border border-gray-300 p-2 text-left">Hasil (Kg)</th>
+            <th class="border border-gray-300 p-2 text-left">Aksi</th>
+          </tr>
+        </thead>
+        <tbody id="tabelBody">
+          <!-- Data akan ditampilkan di sini -->
+        </tbody>
+        <!-- Footer untuk Total -->
+        <tfoot id="tabelFooter" class="bg-gray-50 font-semibold">
+          <!-- Total akan dihitung otomatis -->
+        </tfoot>
+      </table>
+    </div>
+    <p id="statusTabel" class="text-center text-sm mt-3 text-gray-600"></p>
+  </div>
 
+  <!-- Tombol Aksi -->
+  <div class="mb-8">
+    <h3 class="text-lg font-bold text-gray-800 mb-3">Ekspor Data</h3>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <button onclick="cetakPDF()" class="bg-red-600 hover:bg-red-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">📄</span> Cetak PDF
+      </button>
+      <button onclick="unduhCSV()" class="bg-blue-600 hover:bg-blue-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">📊</span> Unduh CSV
+      </button>
+      <button onclick="resetForm()" class="bg-gray-600 hover:bg-gray-700 text-white p-4 rounded-lg font-semibold transition duration-200 flex items-center justify-center gap-2">
+        <span class="text-xl">🔄</span> Reset Form
+      </button>
+    </div>
+    <p id="statusAksi" class="text-center text-sm mt-2 text-gray-600"></p>
+  </div>
+
+  <!-- Informasi -->
+  <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
+    <h3 class="font-bold text-gray-700 mb-2">Cara Menggunakan:</h3>
+    <ol class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
+      <li>Isi semua data pada form di atas</li>
+      <li>Untuk <strong>Nomor Kavling</strong>, bisa isi manual atau pilih dari radio button (37-48)</li>
+      <li><strong>Total Tandan</strong> akan dihitung otomatis dari jumlah Tandan Mentah, Tandan Busuk, dan Jangkos</li>
+      <li>Klik <strong>"Tambah ke Daftar"</strong> untuk menyimpan data sementara</li>
+      <li>Data akan muncul di tabel dengan total keseluruhan di bagian bawah</li>
+      <li>Pilih opsi ekspor di bawah tabel untuk membuat PDF atau CSV</li>
+    </ol>
+  </div>
 </div>
+
+<script>
+// Array untuk menyimpan data sementara
+let dataPanen = [];
+let nomorUrut = 1;
+let selectedRadioValue = ''; // Untuk menyimpan nilai radio yang dipilih
+
+// Inisialisasi radio buttons 37-48
+function initRadioButtons() {
+  const radioContainer = document.querySelector('.grid.gap-2');
+  radioContainer.innerHTML = '';
+  
+  for (let i = 37; i <= 48; i++) {
+    const radioId = `radio_${i}`;
+    const radioHtml = `
+      <div class="flex items-center">
+        <input type="radio" id="${radioId}" name="radio_kavling" value="${i}" 
+               class="h-4 w-4 text-green-600 focus:ring-green-500" 
+               onchange="updateRadioSelection(${i})">
+        <label for="${radioId}" class="ml-1 text-sm text-gray-700">${i}</label>
+      </div>
+    `;
+    radioContainer.innerHTML += radioHtml;
+  }
+}
+
+// Update nilai radio yang dipilih
+function updateRadioSelection(value) {
+  selectedRadioValue = value;
+  document.getElementById('selectedRadio').textContent = `Dipilih: ${value}`;
+  // Juga update input kavling jika kosong
+  if (!document.getElementById('kavling').value.trim()) {
+    document.getElementById('kavling').value = value;
+  }
+}
+
+// Hitung total tandan secara otomatis
+function hitungTotalTandan() {
+  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
+  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
+  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
+  const total = tandanMentah + tandanBusuk + jangkos;
+  
+  document.getElementById('total_tandan').value = total;
+}
+
+// Format tanggal ke Indonesia
+function formatTanggal(tanggal) {
+  if (!tanggal) return '-';
+  const date = new Date(tanggal);
+  return date.toLocaleDateString('id-ID', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric'
+  });
+}
+
+// Validasi input
+function validasiInput(data) {
+  if (!data.kelompok || !data.nama || (!data.kavling && !selectedRadioValue)) {
+    alert('Kelompok, Nama, dan Kavling (atau pilihan radio) wajib diisi!');
+    return false;
+  }
+  if (!data.tanggal) {
+    alert('Tanggal panen harus diisi!');
+    return false;
+  }
+  return true;
+}
+
+// Tambah data ke tabel
+function tambahData() {
+  const tandanMentah = parseInt(document.getElementById('tandan_mentah').value) || 0;
+  const tandanBusuk = parseInt(document.getElementById('tandan_busuk').value) || 0;
+  const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
+  const totalTandan = tandanMentah + tandanBusuk + jangkos;
+  
+  // Prioritaskan radio button jika dipilih, jika tidak gunakan input manual
+  const kavlingValue = selectedRadioValue || document.getElementById('kavling').value.trim();
+  
+  const data = {
+    no: nomorUrut,
+    kelompok: document.getElementById('kelompok').value.trim(),
+    tanggal: document.getElementById('tanggal').value,
+    nama: document.getElementById('nama').value.trim(),
+    kavling: kavlingValue,
+    radio_no: selectedRadioValue || '', // Simpan nilai radio
+    tandan_mentah: tandanMentah,
+    tandan_busuk: tandanBusuk,
+    jangkos: jangkos,
+    total_tandan: totalTandan,
+    berondolan: parseFloat(document.getElementById('berondolan').value) || 0,
+    hasil: parseFloat(document.getElementById('hasil').value) || 0
+  };
+
+  if (!validasiInput(data)) return;
+
+  dataPanen.push(data);
+  nomorUrut++;
+  
+  updateTabel();
+  resetInput();
+  document.getElementById('statusForm').innerText = `✓ Data berhasil ditambahkan! Total: ${dataPanen.length} data`;
+  document.getElementById('statusForm').className = "text-center text-sm mt-2 text-green-600 font-medium";
+}
+
+// Update tabel tampilan
+function updateTabel() {
+  const tbody = document.getElementById('tabelBody');
+  const tfoot = document.getElementById('tabelFooter');
+  tbody.innerHTML = '';
+  
+  if (dataPanen.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="13" class="border border-gray-300 p-4 text-center text-gray-500">
+          Belum ada data. Silakan tambah data terlebih dahulu.
+        </td>
+      </tr>
+    `;
+    tfoot.innerHTML = '';
+    document.getElementById('statusTabel').innerText = "Tabel kosong. Tambah data untuk memulai.";
+    return;
+  }
+  
+  // Hitung total keseluruhan
+  let totalMentah = 0;
+  let totalBusuk = 0;
+  let totalJangkos = 0;
+  let totalSemuaTandan = 0;
+  let totalBerondolan = 0;
+  let totalHasil = 0;
+  
+  dataPanen.forEach((data, index) => {
+    totalMentah += data.tandan_mentah;
+    totalBusuk += data.tandan_busuk;
+    totalJangkos += data.jangkos;
+    totalSemuaTandan += data.total_tandan;
+    totalBerondolan += data.berondolan;
+    totalHasil += data.hasil;
+    
+    const row = document.createElement('tr');
+    row.className = index % 2 === 0 ? 'bg-white' : 'bg-gray-50';
+    row.innerHTML = `
+      <td class="border border-gray-300 p-2">${data.no}</td>
+      <td class="border border-gray-300 p-2">${data.kelompok}</td>
+      <td class="border border-gray-300 p-2">${formatTanggal(data.tanggal)}</td>
+      <td class="border border-gray-300 p-2">${data.nama}</td>
+      <td class="border border-gray-300 p-2">${data.kavling}</td>
+      <td class="border border-gray-300 p-2 text-center ${data.radio_no ? 'bg-green-50 font-medium' : ''}">
+        ${data.radio_no || '-'}
+      </td>
+      <td class="border border-gray-300 p-2 text-right">${data.tandan_mentah}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.tandan_busuk}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.jangkos}</td>
+      <td class="border border-gray-300 p-2 text-right font-semibold">${data.total_tandan}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.berondolan.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2 text-right">${data.hasil.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2 text-center">
+        <button onclick="hapusData(${index})" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-sm transition duration-200">
+          Hapus
+        </button>
+      </td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  // Update footer dengan total
+  tfoot.innerHTML = `
+    <tr class="bg-green-50">
+      <td class="border border-gray-300 p-2 font-bold" colspan="6">TOTAL</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalMentah}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalBusuk}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalJangkos}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold text-green-700">${totalSemuaTandan}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalBerondolan.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2 text-right font-bold">${totalHasil.toFixed(1)}</td>
+      <td class="border border-gray-300 p-2"></td>
+    </tr>
+  `;
+  
+  document.getElementById('statusTabel').innerText = `Data siap diekspor. Total: ${dataPanen.length} entri`;
+}
+
+// Hapus data
+function hapusData(index) {
+  if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+    dataPanen.splice(index, 1);
+    // Perbarui nomor urut
+    dataPanen.forEach((data, i) => {
+      data.no = i + 1;
+    });
+    nomorUrut = dataPanen.length + 1;
+    updateTabel();
+    document.getElementById('statusForm').innerText = `Data berhasil dihapus! Total: ${dataPanen.length} data`;
+    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-blue-600 font-medium";
+  }
+}
+
+// Reset input form
+function resetInput() {
+  document.getElementById('nama').value = '';
+  document.getElementById('kavling').value = '';
+  document.getElementById('tandan_mentah').value = '';
+  document.getElementById('tandan_busuk').value = '';
+  document.getElementById('jangkos').value = '';
+  document.getElementById('total_tandan').value = '';
+  document.getElementById('berondolan').value = '';
+  document.getElementById('hasil').value = '';
+  
+  // Reset radio selection
+  const radios = document.querySelectorAll('input[name="radio_kavling"]');
+  radios.forEach(radio => radio.checked = false);
+  selectedRadioValue = '';
+  document.getElementById('selectedRadio').textContent = '';
+  
+  document.getElementById('nama').focus();
+}
+
+// Reset semua data
+function resetForm() {
+  if (dataPanen.length === 0) {
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk direset.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    return;
+  }
+  
+  if (confirm(`Apakah Anda yakin ingin menghapus SEMUA data (${dataPanen.length} entri)?`)) {
+    dataPanen = [];
+    nomorUrut = 1;
+    document.getElementById('kelompok').value = '';
+    document.getElementById('tanggal').value = '';
+    resetInput();
+    updateTabel();
+    document.getElementById('statusForm').innerText = "Form telah direset.";
+    document.getElementById('statusForm').className = "text-center text-sm mt-2 text-gray-600";
+    document.getElementById('statusTabel').innerText = "Semua data telah dihapus.";
+    document.getElementById('statusAksi').innerText = "✓ Semua data berhasil direset.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+  }
+}
+
+// Cetak PDF menggunakan jsPDF
+function cetakPDF() {
+  if (dataPanen.length === 0) {
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk dicetak. Silakan tambah data terlebih dahulu.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('landscape');
+  
+  // Judul
+  doc.setFontSize(18);
+  doc.text('LAPORAN PANEN SAWIT', 148, 15, { align: 'center' });
+  
+  // Informasi header
+  doc.setFontSize(10);
+  doc.text(`Tanggal Cetak: ${new Date().toLocaleDateString('id-ID')}`, 14, 25);
+  doc.text(`Total Data: ${dataPanen.length} entri`, 14, 32);
+  doc.text(`Kelompok: ${dataPanen[0].kelompok}`, 14, 39);
+  
+  // Header tabel
+  const headers = [
+    ['No', 'Kelompok', 'Tanggal', 'Nama', 'Kavling', 'Radio No', 'T. Mentah', 'T. Busuk', 'Jangkos', 'Total', 'Berondolan (Kg)', 'Hasil (Kg)']
+  ];
+  
+  // Data tabel
+  const tableData = dataPanen.map(data => [
+    data.no,
+    data.kelompok,
+    formatTanggal(data.tanggal),
+    data.nama,
+    data.kavling,
+    data.radio_no || '-',
+    data.tandan_mentah.toString(),
+    data.tandan_busuk.toString(),
+    data.jangkos.toString(),
+    data.total_tandan.toString(),
+    data.berondolan.toFixed(1),
+    data.hasil.toFixed(1)
+  ]);
+  
+  // Buat tabel
+  doc.autoTable({
+    head: headers,
+    body: tableData,
+    startY: 45,
+    theme: 'grid',
+    styles: { fontSize: 8, cellPadding: 2 },
+    headStyles: { fillColor: [34, 139, 34] }, // Warna hijau
+    margin: { horizontal: 10 }
+  });
+  
+  // Hitung total
+  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
+  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
+  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
+  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
+  const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
+  const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
+  
+  // Footer dengan total
+  const finalY = doc.lastAutoTable.finalY || 100;
+  doc.setFontSize(10);
+  doc.setFont(undefined, 'bold');
+  doc.text('TOTAL:', 14, finalY + 10);
+  doc.text(`Mentah: ${totalMentah}`, 45, finalY + 10);
+  doc.text(`Busuk: ${totalBusuk}`, 75, finalY + 10);
+  doc.text(`Jangkos: ${totalJangkos}`, 105, finalY + 10);
+  doc.text(`Total Tandan: ${totalSemuaTandan}`, 135, finalY + 10);
+  doc.text(`Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 175, finalY + 10);
+  doc.text(`Hasil: ${totalHasil.toFixed(1)} Kg`, 215, finalY + 10);
+  
+  // Simpan PDF
+  const tanggal = new Date().toISOString().slice(0,10);
+  doc.save(`Laporan_Panen_Sawit_${tanggal}.pdf`);
+  
+  document.getElementById('statusAksi').innerText = "✓ PDF berhasil dibuat dan diunduh!";
+  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+}
+
+// Unduh data sebagai CSV
+function unduhCSV() {
+  if (dataPanen.length === 0) {
+    document.getElementById('statusAksi').innerText = "Tidak ada data untuk diunduh. Silakan tambah data terlebih dahulu.";
+    document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-yellow-600 font-medium";
+    return;
+  }
+  
+  // Header CSV
+  let csv = 'No,Kelompok,Tanggal,Nama,Kavling,Radio No,Tandan Mentah,Tandan Busuk,Jangkos,Total Tandan,Berondolan (Kg),Hasil (Kg)\n';
+  
+  // Data CSV
+  dataPanen.forEach(data => {
+    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.kavling},${data.radio_no || ''},${data.tandan_mentah},${data.tandan_busuk},${data.jangkos},${data.total_tandan},${data.berondolan.toFixed(1)},${data.hasil.toFixed(1)}\n`;
+  });
+  
+  // Hitung total untuk CSV
+  const totalMentah = dataPanen.reduce((sum, data) => sum + data.tandan_mentah, 0);
+  const totalBusuk = dataPanen.reduce((sum, data) => sum + data.tandan_busuk, 0);
+  const totalJangkos = dataPanen.reduce((sum, data) => sum + data.jangkos, 0);
+  const totalSemuaTandan = dataPanen.reduce((sum, data) => sum + data.total_tandan, 0);
+  const totalBerondolan = dataPanen.reduce((sum, data) => sum + data.berondolan, 0);
+  const totalHasil = dataPanen.reduce((sum, data) => sum + data.hasil, 0);
+  
+  csv += `\nTOTAL,,,,,${totalMentah},${totalBusuk},${totalJangkos},${totalSemuaTandan},${totalBerondolan.toFixed(1)},${totalHasil.toFixed(1)}\n`;
+  
+  // Buat blob dan unduh
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', `data_panen_sawit_${new Date().toISOString().slice(0,10)}.csv`);
+  link.style.visibility = 'hidden';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  document.getElementById('statusAksi').innerText = "✓ File CSV berhasil diunduh!";
+  document.getElementById('statusAksi').className = "text-center text-sm mt-2 text-green-600 font-medium";
+}
+
+// Inisialisasi
+window.onload = function() {
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById('tanggal').value = today;
+  initRadioButtons(); // Inisialisasi radio buttons
+  document.getElementById('kelompok').focus();
+};
+</script>
 
 </body>
 </html>
