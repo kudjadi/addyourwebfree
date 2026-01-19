@@ -29,26 +29,31 @@
       <input id="nama" placeholder="Nama lengkap pemanen" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
     </div>
     
-    <!-- Kolom Kavling dan Radio -->
+    <!-- Kolom Dropdown 37-48 dan Kavling -->
     <div class="space-y-2">
-      <label class="block text-sm font-medium text-gray-700">Nomor Kavling</label>
-      <div class="flex gap-4">
-        <!-- Input Kavling -->
-        <div class="flex-1">
-          <input id="kavling" placeholder="Contoh: KAV-001" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+        <!-- Dropdown 37-48 -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Pilih Nomor (37-48)</label>
+          <select id="dropdown_no" class="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500" onchange="updateKavlingDropdown()">
+            <option value="">-- Pilih Nomor --</option>
+            <!-- Opsi akan diisi oleh JavaScript -->
+          </select>
         </div>
         
-        <!-- Radio Button Group -->
-        <div class="flex-1">
-          <div class="border border-gray-300 rounded-lg p-3">
-            <p class="text-xs font-medium text-gray-600 mb-2">Pilih Nomor (37-48):</p>
-            <div class="grid grid-cols-6 gap-2">
-              <!-- Radio buttons akan dibuat dinamis oleh JavaScript -->
-            </div>
+        <!-- Dropdown Kavling berdasarkan pilihan -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-1">Nomor Kavling</label>
+          <div class="flex gap-2">
+            <select id="dropdown_kavling" class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
+              <option value="">-- Pilih Kavling --</option>
+              <!-- Opsi akan diisi dinamis -->
+            </select>
+            <input id="kavling_manual" placeholder="Atau ketik manual" class="flex-1 border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500">
           </div>
         </div>
       </div>
-      <div id="selectedRadio" class="text-sm text-green-600 font-medium mt-1"></div>
+      <div id="selectedInfo" class="text-sm text-green-600 font-medium mt-1"></div>
     </div>
     
     <!-- Kolom Tandan -->
@@ -104,8 +109,8 @@
             <th class="border border-gray-300 p-2 text-left">Kelompok</th>
             <th class="border border-gray-300 p-2 text-left">Tanggal</th>
             <th class="border border-gray-300 p-2 text-left">Nama</th>
+            <th class="border border-gray-300 p-2 text-left">Nomor (37-48)</th>
             <th class="border border-gray-300 p-2 text-left">Kavling</th>
-            <th class="border border-gray-300 p-2 text-left">Radio No</th>
             <th class="border border-gray-300 p-2 text-left">T. Mentah</th>
             <th class="border border-gray-300 p-2 text-left">T. Busuk</th>
             <th class="border border-gray-300 p-2 text-left">Jangkos</th>
@@ -149,7 +154,9 @@
     <h3 class="font-bold text-gray-700 mb-2">Cara Menggunakan:</h3>
     <ol class="list-decimal pl-5 text-sm text-gray-600 space-y-1">
       <li>Isi semua data pada form di atas</li>
-      <li>Untuk <strong>Nomor Kavling</strong>, bisa isi manual atau pilih dari radio button (37-48)</li>
+      <li><strong>Pilih Nomor (37-48)</strong> dari dropdown pertama</li>
+      <li><strong>Pilih Kavling</strong> dari dropdown kedua yang muncul sesuai pilihan nomor</li>
+      <li>Atau <strong>ketik manual</strong> nomor kavling di input sebelah dropdown</li>
       <li><strong>Total Tandan</strong> akan dihitung otomatis dari jumlah Tandan Mentah, Tandan Busuk, dan Jangkos</li>
       <li>Klik <strong>"Tambah ke Daftar"</strong> untuk menyimpan data sementara</li>
       <li>Data akan muncul di tabel dengan total keseluruhan di bagian bawah</li>
@@ -162,34 +169,58 @@
 // Array untuk menyimpan data sementara
 let dataPanen = [];
 let nomorUrut = 1;
-let selectedRadioValue = ''; // Untuk menyimpan nilai radio yang dipilih
 
-// Inisialisasi radio buttons 37-48
-function initRadioButtons() {
-  const radioContainer = document.querySelector('.grid.gap-2');
-  radioContainer.innerHTML = '';
+// Data kavling berdasarkan nomor 37-48
+const kavlingData = {
+  37: ["872", "862", "908", "851", "852", "855", "853", "854", "856", "857", "858", "859", "860", "861", "863", "874", "873", "871", "870", "869", "868", "867", "866", "865", "864"],
+  38: ["990", "981", "975", "980", "881", "880", "879", "877", "976", "876", "875", "984", "983", "982", "985", "986", "987", "988", "989", "1000", "999", "998", "997", "996"],
+  39: ["964", "979", "951", "965", "977", "978", "882", "955", "950", "952", "953", "954", "956", "957", "958", "959", "960", "961", "962", "963", "966", "967", "968", "969"],
+  40: ["1012", "1011", "1010", "1009", "1008", "1007", "1006", "1013", "1014", "1015", "1016", "1017", "1018", "1019", "1020", "1031", "1032", "1033", "1034", "1035", "1036", "1037", "1038", "1039", "1040", "1041", "1026"],
+  41: ["1029", "1024", "1001", "1003", "973", "992", "1030", "1028", "1027", "1025", "1023", "1021", "1005", "1004", "972", "971", "970", "991", "993", "994", "995", "1002", "974"],
+  42: ["1065", "1063", "1054", "1053", "1045", "1043", "1042", "1047", "1048", "1049", "1050", "1051", "1052", "1055", "1056", "1057", "1058", "1059", "1060", "1061", "1062", "1064", "1066", "1044", "1046"],
+  43: ["1103", "1077", "1075", "1069", "1067", "1068", "1074", "1076", "1078", "1079", "1080", "1081", "1082", "1083", "1084", "1104", "1102", "1101", "1100", "1099", "1098", "1105", "1097", "1070", "1073"],
+  44: ["1093", "1089", "1109", "1091", "1133", "1132", "1131", "1096", "1094", "1095", "1092", "1106", "1107", "1108", "1110", "1111", "1112", "1113", "1085", "1086", "1087", "1088", "1072", "1071", "1090"],
+  45: ["1150", "1155", "1157", "1137", "1135", "1154", "1134", "1114", "1115", "1116", "1117", "1157", "1156", "1149", "1151", "1152", "1139", "1140", "1141", "1127", "1128", "1129", "1130"],
+  46: ["1118", "1124", "1143", "1147", "1163", "1161", "1159", "1119", "1120", "1123", "1125", "1126", "1142", "1144", "1145", "1165", "1166", "1148", "1146", "1164", "1162", "1160", "1158"],
+  47: ["1193", "1189", "1191", "1182", "1175", "1168", "1170", "1177", "1194", "1179", "1180", "1181", "1183", "1184", "1185", "1186", "1187", "1188", "1192", "1167", "1169", "1174", "1176", "1190"],
+  48: ["1195", "1200", "1213", "1198", "1212", "1173", "1171", "1172", "1196", "1207", "1206", "1205", "1204", "1203", "1202", "1201", "1210", "1208", "1216", "1215", "1214", "1199"]
+};
+
+// Inisialisasi dropdown nomor 37-48
+function initDropdowns() {
+  const dropdownNo = document.getElementById('dropdown_no');
   
+  // Tambahkan opsi 37-48
   for (let i = 37; i <= 48; i++) {
-    const radioId = `radio_${i}`;
-    const radioHtml = `
-      <div class="flex items-center">
-        <input type="radio" id="${radioId}" name="radio_kavling" value="${i}" 
-               class="h-4 w-4 text-green-600 focus:ring-green-500" 
-               onchange="updateRadioSelection(${i})">
-        <label for="${radioId}" class="ml-1 text-sm text-gray-700">${i}</label>
-      </div>
-    `;
-    radioContainer.innerHTML += radioHtml;
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = i;
+    dropdownNo.appendChild(option);
   }
 }
 
-// Update nilai radio yang dipilih
-function updateRadioSelection(value) {
-  selectedRadioValue = value;
-  document.getElementById('selectedRadio').textContent = `Dipilih: ${value}`;
-  // Juga update input kavling jika kosong
-  if (!document.getElementById('kavling').value.trim()) {
-    document.getElementById('kavling').value = value;
+// Update dropdown kavling berdasarkan pilihan nomor
+function updateKavlingDropdown() {
+  const selectedNo = document.getElementById('dropdown_no').value;
+  const dropdownKavling = document.getElementById('dropdown_kavling');
+  const selectedInfo = document.getElementById('selectedInfo');
+  
+  // Reset dropdown kavling
+  dropdownKavling.innerHTML = '<option value="">-- Pilih Kavling --</option>';
+  
+  if (selectedNo && kavlingData[selectedNo]) {
+    // Tambahkan opsi kavling berdasarkan nomor yang dipilih
+    kavlingData[selectedNo].forEach(kavling => {
+      const option = document.createElement('option');
+      option.value = kavling;
+      option.textContent = kavling;
+      dropdownKavling.appendChild(option);
+    });
+    
+    selectedInfo.textContent = `Nomor ${selectedNo} dipilih. Tersedia ${kavlingData[selectedNo].length} kavling.`;
+    selectedInfo.className = "text-sm text-green-600 font-medium mt-1";
+  } else {
+    selectedInfo.textContent = "";
   }
 }
 
@@ -216,14 +247,22 @@ function formatTanggal(tanggal) {
 
 // Validasi input
 function validasiInput(data) {
-  if (!data.kelompok || !data.nama || (!data.kavling && !selectedRadioValue)) {
-    alert('Kelompok, Nama, dan Kavling (atau pilihan radio) wajib diisi!');
+  if (!data.kelompok || !data.nama) {
+    alert('Kelompok dan Nama wajib diisi!');
     return false;
   }
+  
   if (!data.tanggal) {
     alert('Tanggal panen harus diisi!');
     return false;
   }
+  
+  // Cek kavling (dropdown atau manual)
+  if (!data.kavling) {
+    alert('Nomor Kavling harus dipilih atau diisi manual!');
+    return false;
+  }
+  
   return true;
 }
 
@@ -234,16 +273,21 @@ function tambahData() {
   const jangkos = parseInt(document.getElementById('jangkos').value) || 0;
   const totalTandan = tandanMentah + tandanBusuk + jangkos;
   
-  // Prioritaskan radio button jika dipilih, jika tidak gunakan input manual
-  const kavlingValue = selectedRadioValue || document.getElementById('kavling').value.trim();
+  // Ambil nilai dari dropdown atau input manual
+  const selectedNo = document.getElementById('dropdown_no').value;
+  const selectedKavling = document.getElementById('dropdown_kavling').value;
+  const manualKavling = document.getElementById('kavling_manual').value.trim();
+  
+  // Prioritaskan dropdown kavling, jika kosong gunakan manual
+  const kavlingValue = selectedKavling || manualKavling;
   
   const data = {
     no: nomorUrut,
     kelompok: document.getElementById('kelompok').value.trim(),
     tanggal: document.getElementById('tanggal').value,
     nama: document.getElementById('nama').value.trim(),
+    nomor_dropdown: selectedNo || '', // Simpan nomor dari dropdown 37-48
     kavling: kavlingValue,
-    radio_no: selectedRadioValue || '', // Simpan nilai radio
     tandan_mentah: tandanMentah,
     tandan_busuk: tandanBusuk,
     jangkos: jangkos,
@@ -305,9 +349,11 @@ function updateTabel() {
       <td class="border border-gray-300 p-2">${data.kelompok}</td>
       <td class="border border-gray-300 p-2">${formatTanggal(data.tanggal)}</td>
       <td class="border border-gray-300 p-2">${data.nama}</td>
-      <td class="border border-gray-300 p-2">${data.kavling}</td>
-      <td class="border border-gray-300 p-2 text-center ${data.radio_no ? 'bg-green-50 font-medium' : ''}">
-        ${data.radio_no || '-'}
+      <td class="border border-gray-300 p-2 text-center ${data.nomor_dropdown ? 'bg-blue-50 font-medium' : ''}">
+        ${data.nomor_dropdown || '-'}
+      </td>
+      <td class="border border-gray-300 p-2 ${data.nomor_dropdown ? 'bg-green-50' : ''}">
+        ${data.kavling}
       </td>
       <td class="border border-gray-300 p-2 text-right">${data.tandan_mentah}</td>
       <td class="border border-gray-300 p-2 text-right">${data.tandan_busuk}</td>
@@ -359,19 +405,18 @@ function hapusData(index) {
 // Reset input form
 function resetInput() {
   document.getElementById('nama').value = '';
-  document.getElementById('kavling').value = '';
   document.getElementById('tandan_mentah').value = '';
   document.getElementById('tandan_busuk').value = '';
   document.getElementById('jangkos').value = '';
   document.getElementById('total_tandan').value = '';
   document.getElementById('berondolan').value = '';
   document.getElementById('hasil').value = '';
+  document.getElementById('kavling_manual').value = '';
   
-  // Reset radio selection
-  const radios = document.querySelectorAll('input[name="radio_kavling"]');
-  radios.forEach(radio => radio.checked = false);
-  selectedRadioValue = '';
-  document.getElementById('selectedRadio').textContent = '';
+  // Reset dropdowns ke nilai default
+  document.getElementById('dropdown_no').selectedIndex = 0;
+  document.getElementById('dropdown_kavling').innerHTML = '<option value="">-- Pilih Kavling --</option>';
+  document.getElementById('selectedInfo').textContent = '';
   
   document.getElementById('nama').focus();
 }
@@ -422,7 +467,7 @@ function cetakPDF() {
   
   // Header tabel
   const headers = [
-    ['No', 'Kelompok', 'Tanggal', 'Nama', 'Kavling', 'Radio No', 'T. Mentah', 'T. Busuk', 'Jangkos', 'Total', 'Berondolan (Kg)', 'Hasil (Kg)']
+    ['No', 'Kelompok', 'Tanggal', 'Nama', 'No (37-48)', 'Kavling', 'T. Mentah', 'T. Busuk', 'Jangkos', 'Total', 'Berondolan (Kg)', 'Hasil (Kg)']
   ];
   
   // Data tabel
@@ -431,8 +476,8 @@ function cetakPDF() {
     data.kelompok,
     formatTanggal(data.tanggal),
     data.nama,
+    data.nomor_dropdown || '-',
     data.kavling,
-    data.radio_no || '-',
     data.tandan_mentah.toString(),
     data.tandan_busuk.toString(),
     data.jangkos.toString(),
@@ -465,12 +510,12 @@ function cetakPDF() {
   doc.setFontSize(10);
   doc.setFont(undefined, 'bold');
   doc.text('TOTAL:', 14, finalY + 10);
-  doc.text(`Mentah: ${totalMentah}`, 45, finalY + 10);
-  doc.text(`Busuk: ${totalBusuk}`, 75, finalY + 10);
-  doc.text(`Jangkos: ${totalJangkos}`, 105, finalY + 10);
-  doc.text(`Total Tandan: ${totalSemuaTandan}`, 135, finalY + 10);
-  doc.text(`Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 175, finalY + 10);
-  doc.text(`Hasil: ${totalHasil.toFixed(1)} Kg`, 215, finalY + 10);
+  doc.text(`Mentah: ${totalMentah}`, 50, finalY + 10);
+  doc.text(`Busuk: ${totalBusuk}`, 80, finalY + 10);
+  doc.text(`Jangkos: ${totalJangkos}`, 110, finalY + 10);
+  doc.text(`Total Tandan: ${totalSemuaTandan}`, 140, finalY + 10);
+  doc.text(`Berondolan: ${totalBerondolan.toFixed(1)} Kg`, 180, finalY + 10);
+  doc.text(`Hasil: ${totalHasil.toFixed(1)} Kg`, 220, finalY + 10);
   
   // Simpan PDF
   const tanggal = new Date().toISOString().slice(0,10);
@@ -489,11 +534,11 @@ function unduhCSV() {
   }
   
   // Header CSV
-  let csv = 'No,Kelompok,Tanggal,Nama,Kavling,Radio No,Tandan Mentah,Tandan Busuk,Jangkos,Total Tandan,Berondolan (Kg),Hasil (Kg)\n';
+  let csv = 'No,Kelompok,Tanggal,Nama,Nomor (37-48),Kavling,Tandan Mentah,Tandan Busuk,Jangkos,Total Tandan,Berondolan (Kg),Hasil (Kg)\n';
   
   // Data CSV
   dataPanen.forEach(data => {
-    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.kavling},${data.radio_no || ''},${data.tandan_mentah},${data.tandan_busuk},${data.jangkos},${data.total_tandan},${data.berondolan.toFixed(1)},${data.hasil.toFixed(1)}\n`;
+    csv += `${data.no},${data.kelompok},${formatTanggal(data.tanggal)},${data.nama},${data.nomor_dropdown || ''},${data.kavling},${data.tandan_mentah},${data.tandan_busuk},${data.jangkos},${data.total_tandan},${data.berondolan.toFixed(1)},${data.hasil.toFixed(1)}\n`;
   });
   
   // Hitung total untuk CSV
@@ -527,7 +572,7 @@ function unduhCSV() {
 window.onload = function() {
   const today = new Date().toISOString().split('T')[0];
   document.getElementById('tanggal').value = today;
-  initRadioButtons(); // Inisialisasi radio buttons
+  initDropdowns(); // Inisialisasi dropdowns
   document.getElementById('kelompok').focus();
 };
 </script>
