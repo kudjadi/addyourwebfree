@@ -1,6 +1,6 @@
 // Simpan data di file JSON di repo, lalu baca via raw URL
 async function loadFromGitHubSimple() {
-  const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/data.json';
+  const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/kudjadi/addyourwebfree/BRANCH/data.json';
   
   try {
     const response = await fetch(GITHUB_RAW_URL);
