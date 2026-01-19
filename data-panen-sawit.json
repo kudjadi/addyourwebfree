@@ -1,0 +1,33 @@
+// Simpan data di file JSON di repo, lalu baca via raw URL
+async function loadFromGitHubSimple() {
+  const GITHUB_RAW_URL = 'https://raw.githubusercontent.com/USERNAME/REPO/BRANCH/data.json';
+  
+  try {
+    const response = await fetch(GITHUB_RAW_URL);
+    const data = await response.json();
+    
+    // Proses data...
+    console.log('Data dari GitHub:', data);
+  } catch (error) {
+    console.error('Gagal load dari GitHub:', error);
+  }
+}
+
+// Untuk upload, buat file JSON lalu manual upload ke GitHub
+function exportForGitHub() {
+  const exportData = {
+    dataPanen: dataPanen,
+    lastExport: new Date().toISOString(),
+    total: dataPanen.length
+  };
+  
+  const dataStr = JSON.stringify(exportData, null, 2);
+  const blob = new Blob([dataStr], { type: 'application/json' });
+  
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = 'data-panen-sawit.json';
+  link.click();
+  
+  alert('File JSON telah diunduh. Upload manual ke repository GitHub Anda.');
+}
