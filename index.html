@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pendataan Panen Sawit</title>
-  <!-- Tailwind CSS via CDN (development only) -->
+  <!-- Tailwind CSS via CDN -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <!-- SweetAlert2 -->
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
@@ -13,21 +13,21 @@
   <!-- Custom CSS -->
   <link rel="stylesheet" href="style.css">
 </head>
-<body class="bg-gray-50 text-gray-800 min-h-screen">
+<body class="bg-gray-50 text-gray-800 min-h-screen dark:bg-gray-900 dark:text-gray-100">
   <!-- Dark Mode Toggle -->
   <button id="darkModeToggle" 
-          class="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center hover:bg-green-700 active:scale-95 transition-all"
+          class="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center hover:bg-green-700 active:scale-95 transition-all dark:bg-green-700"
           title="Mode Gelap/Terang">
     <i class="bi bi-moon"></i>
   </button>
 
-  <div class="container mx-auto px-3 py-4 max-w-4xl">
+  <div class="container mx-auto px-3 py-4 max-w-6xl">
     <!-- Header -->
     <div class="text-center mb-6">
-      <h1 class="text-2xl font-bold text-green-700 mb-2">
+      <h1 class="text-2xl font-bold text-green-700 dark:text-green-400 mb-2">
         <i class="bi bi-tree me-2"></i>Pendataan Panen Sawit
       </h1>
-      <div class="text-sm text-gray-600">
+      <div class="text-sm text-gray-600 dark:text-gray-300">
         <p class="mb-1">Input data hasil panen sesuai kelompok masing-masing.</p>
         <p>Pastikan koneksi internet saat mengisi data.</p>
       </div>
@@ -40,21 +40,21 @@
       <div class="flex flex-wrap gap-2 justify-between items-center mt-4">
         <div class="flex flex-wrap gap-2 items-center">
           <button id="addData" 
-                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm">
+                  class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 text-sm dark:bg-blue-700 dark:hover:bg-blue-800">
             <i class="bi bi-plus-circle"></i> Tambah Data
           </button>
           <button id="loadDraftBtn" 
-                  class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center gap-2 text-sm hidden">
+                  class="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 flex items-center gap-2 text-sm hidden dark:bg-yellow-600 dark:hover:bg-yellow-700">
             <i class="bi bi-cloud-download"></i> Load Draft
           </button>
         </div>
         <div class="flex gap-2">
           <button id="loadData" 
-                  class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center gap-2 text-sm">
+                  class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 flex items-center gap-2 text-sm dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600">
             <i class="bi bi-arrow-clockwise"></i> Refresh
           </button>
           <button id="saveData" 
-                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm">
+                  class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 text-sm dark:bg-green-700 dark:hover:bg-green-800">
             <i class="bi bi-cloud-arrow-up"></i> Simpan
           </button>
         </div>
@@ -62,78 +62,95 @@
     </div>
 
     <!-- Data Table -->
-    <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
-      <div class="bg-green-600 text-white px-4 py-3 flex justify-between items-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden mb-6">
+      <div class="bg-green-600 dark:bg-green-700 text-white px-4 py-3 flex justify-between items-center">
         <h3 class="font-semibold flex items-center text-sm">
           <i class="bi bi-table me-2"></i>Data Panen
         </h3>
         <div class="flex items-center gap-2">
-          <span id="totalData" class="bg-white text-green-700 px-2 py-1 rounded text-xs font-medium">0 Data</span>
+          <span id="totalData" class="bg-white dark:bg-gray-100 text-green-700 px-2 py-1 rounded text-xs font-medium">0 Data</span>
           <span id="draftBadge" class="bg-yellow-500 text-white px-2 py-1 rounded text-xs font-medium hidden">Draft</span>
         </div>
       </div>
 
-      <!-- Grouped Data Dropdown -->
-      <div id="groupedData" class="p-4 border-b">
-        <div class="space-y-2">
-          <!-- Grouped data will be populated here -->
-        </div>
+      <!-- Desktop Table (Hidden on Mobile) -->
+      <div class="overflow-x-auto hidden md:block">
+        <table id="tabelPanen" class="w-full">
+          <thead class="bg-green-50 dark:bg-green-900/30">
+            <tr class="text-xs">
+              <th class="py-2 px-3 text-center">No</th>
+              <th class="py-2 px-3 text-left">Tanggal</th>
+              <th class="py-2 px-3 text-left">Pemanen</th>
+              <th class="py-2 px-3 text-left">Kelompok</th>
+              <th class="py-2 px-3 text-left">Kavling</th>
+              <th class="py-2 px-3 text-center">Tandan</th>
+              <th class="py-2 px-3 text-center">Berondolan</th>
+              <th class="py-2 px-3 text-center">Aksi</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Mobile Dropdown (Visible on Mobile) -->
+      <div id="mobileDropdown" class="md:hidden p-0">
+        <!-- Mobile content will be populated by JavaScript -->
       </div>
 
       <!-- Pagination -->
-      <div id="paginationContainer" class="hidden px-4 py-3 border-t">
+      <div id="paginationContainer" class="hidden px-4 py-3 border-t dark:border-gray-700">
         <div class="flex items-center justify-between">
           <button id="prevPage" 
-                  class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
             <i class="bi bi-chevron-left"></i> Sebelumnya
           </button>
-          <div class="text-xs text-gray-600">
+          <div class="text-xs text-gray-600 dark:text-gray-400">
             Hal. <span id="currentPage" class="font-medium">1</span> dari <span id="totalPages" class="font-medium">1</span>
           </div>
           <button id="nextPage" 
-                  class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+                  class="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 flex items-center gap-1 text-sm disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600">
             Berikutnya <i class="bi bi-chevron-right"></i>
           </button>
         </div>
       </div>
 
       <!-- Summary Footer -->
-      <div class="bg-gray-50 px-4 py-3 border-t">
+      <div class="bg-gray-50 dark:bg-gray-900/30 px-4 py-3 border-t dark:border-gray-700">
         <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
           <div>
-            <div class="text-xs text-gray-500">Total Data</div>
-            <div id="summaryTotal" class="font-bold text-green-600">0</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Total Data</div>
+            <div id="summaryTotal" class="font-bold text-green-600 dark:text-green-400">0</div>
           </div>
           <div>
-            <div class="text-xs text-gray-500">Total Tandan</div>
-            <div id="summaryTandan" class="font-bold text-blue-600">0</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Total Tandan</div>
+            <div id="summaryTandan" class="font-bold text-blue-600 dark:text-blue-400">0</div>
           </div>
           <div>
-            <div class="text-xs text-gray-500">Total Berondolan</div>
-            <div id="summaryBerondolan" class="font-bold text-yellow-600">0 kg</div>
+            <div class="text-xs text-gray-500 dark:text-gray-400">Total Berondolan</div>
+            <div id="summaryBerondolan" class="font-bold text-yellow-600 dark:text-yellow-400">0 kg</div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- Connection Status -->
-    <div class="bg-blue-50 border border-blue-200 rounded-lg p-3">
+    <div class="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
       <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
         <div class="flex items-center gap-2">
-          <i class="bi bi-google text-blue-600"></i>
+          <i class="bi bi-google text-blue-600 dark:text-blue-400"></i>
           <div class="text-sm">
-            <div class="font-medium">Google Sheets</div>
-            <div class="text-xs text-gray-600">
+            <div class="font-medium dark:text-gray-200">Google Sheets</div>
+            <div class="text-xs text-gray-600 dark:text-gray-400">
               <span id="statusText">Memuat...</span>
             </div>
           </div>
         </div>
         <div class="flex items-center gap-2">
-          <span id="syncStatus" class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">
+          <span id="syncStatus" class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium dark:bg-blue-900 dark:text-blue-300">
             <i class="bi bi-cloud-arrow-up"></i> Sync
           </span>
           <button id="clearAllBtn" 
-                  class="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 flex items-center gap-1 text-xs">
+                  class="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 flex items-center gap-1 text-xs dark:bg-red-900 dark:text-red-300 dark:hover:bg-red-800">
             <i class="bi bi-trash"></i> Hapus Semua
           </button>
         </div>
@@ -143,8 +160,8 @@
 
   <!-- Detail Modal -->
   <div id="detailModal" class="fixed inset-0 bg-black/50 flex items-center justify-center p-3 z-50 hidden">
-    <div class="bg-white rounded-lg shadow-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
-      <div class="bg-green-600 text-white px-4 py-3 rounded-t-lg flex justify-between items-center">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-sm w-full max-h-[90vh] overflow-y-auto">
+      <div class="bg-green-600 dark:bg-green-700 text-white px-4 py-3 rounded-t-lg flex justify-between items-center">
         <h3 class="font-bold">Detail Panen</h3>
         <button id="closeModal" class="text-white hover:text-gray-200">
           <i class="bi bi-x-lg"></i>
