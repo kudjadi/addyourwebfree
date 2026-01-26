@@ -51,28 +51,15 @@ function validateNumber(input) {
 }
 
 function showSkeletonLoader() {
-  const mobileCards = document.getElementById('mobileCards');
-  const tabel = document.querySelector('#tabelPanen tbody');
+  const groupedData = document.getElementById('groupedData');
   
-  mobileCards.innerHTML = `
-    <div class="p-3 space-y-3">
+  groupedData.innerHTML = `
+    <div class="space-y-2">
       ${Array(3).fill().map(() => `
-        <div class="skeleton-item h-20 rounded"></div>
+        <div class="skeleton-item h-12 rounded"></div>
       `).join('')}
     </div>
   `;
-  
-  if (tabel) {
-    tabel.innerHTML = `
-      ${Array(3).fill().map(() => `
-        <tr>
-          ${Array(8).fill().map(() => `
-            <td class="py-3 px-3"><div class="skeleton-item h-5 rounded"></div></td>
-          `).join('')}
-        </tr>
-      `).join('')}
-    `;
-  }
 }
 
 // ==================== FUNGSI API ====================
@@ -85,19 +72,19 @@ function updateStatus(status, message) {
   
   switch(status) {
     case 'connected':
-      statusText.className = 'text-green-600 dark:text-green-400';
+      statusText.className = 'text-green-600';
       syncStatus.innerHTML = '<i class="bi bi-cloud-check"></i> Terhubung';
-      syncStatus.className = 'px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium dark:bg-green-900 dark:text-green-300';
+      syncStatus.className = 'px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium';
       break;
     case 'loading':
-      statusText.className = 'text-yellow-600 dark:text-yellow-400';
+      statusText.className = 'text-yellow-600';
       syncStatus.innerHTML = '<i class="bi bi-arrow-repeat animate-spin"></i> Memuat';
-      syncStatus.className = 'px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium dark:bg-yellow-900 dark:text-yellow-300';
+      syncStatus.className = 'px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs font-medium';
       break;
     default:
-      statusText.className = 'text-red-600 dark:text-red-400';
+      statusText.className = 'text-red-600';
       syncStatus.innerHTML = '<i class="bi bi-cloud-slash"></i> Offline';
-      syncStatus.className = 'px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium dark:bg-red-900 dark:text-red-300';
+      syncStatus.className = 'px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium';
   }
 }
 
@@ -444,15 +431,15 @@ function createForm() {
   const accordion = document.getElementById('accordionPanen');
   
   const item = document.createElement('div');
-  item.className = 'accordion-item bg-white dark:bg-gray-800 rounded border border-gray-200 dark:border-gray-700 mb-3 overflow-hidden';
+  item.className = 'accordion-item bg-white rounded border border-gray-200 mb-3 overflow-hidden';
   
   item.innerHTML = `
-    <button class="accordion-button w-full px-3 py-3 bg-gray-50 dark:bg-gray-900 text-left flex items-center justify-between hover:bg-gray-100 dark:hover:bg-gray-800"
+    <button class="accordion-button w-full px-3 py-3 bg-gray-50 text-left flex items-center justify-between hover:bg-gray-100"
             onclick="toggleAccordion(this)">
       <div class="flex items-center gap-2">
-        <i class="bi bi-plus-circle text-blue-600 dark:text-blue-400"></i>
+        <i class="bi bi-plus-circle text-blue-600"></i>
         <span class="text-sm">Pemanen: 
-          <span id="preview${uniqueId}" class="text-blue-600 dark:text-blue-400 font-medium">[belum diisi]</span>
+          <span id="preview${uniqueId}" class="text-blue-600 font-medium">[belum diisi]</span>
         </span>
       </div>
       <i class="bi bi-chevron-down text-xs transition-transform"></i>
@@ -462,21 +449,21 @@ function createForm() {
       <div class="space-y-3">
         <!-- NAMA PEMANEN DI AWAL -->
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Nama Pemanen <span class="text-red-500">*</span>
           </label>
           <input type="text" 
-                 class="pemanen w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                 class="pemanen w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                  required 
                  oninput="document.getElementById('preview${uniqueId}').textContent=this.value||'[belum diisi]'"
                  placeholder="Masukkan nama pemanen">
         </div>
         
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Kelompok <span class="text-red-500">*</span>
           </label>
-          <select class="pengurus w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+          <select class="pengurus w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                   required onchange="updateKavlingOptions(this, '${uniqueId}')">
             <option value="">-- Pilih Kelompok --</option>
             ${pengurusList.map(p => `<option value="${p}">${p}</option>`).join('')}
@@ -484,70 +471,70 @@ function createForm() {
         </div>
         
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Kavling <span class="text-red-500">*</span>
           </label>
           <select id="kavling${uniqueId}" 
-                  class="kavling w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                  class="kavling w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                   required>
             <option value="">-- Pilih Kavling --</option>
           </select>
         </div>
         
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Tanggal <span class="text-red-500">*</span>
           </label>
           <input type="date" 
-                 class="tanggal w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                 class="tanggal w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                  required 
                  value="${new Date().toISOString().split('T')[0]}">
         </div>
         
         <div class="grid grid-cols-2 gap-2">
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               Tandan Matang
             </label>
             <input type="number" 
-                   class="matang w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                   class="matang w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                    min="0" value="0" placeholder="0" oninput="validateNumber(this)">
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               Tandan Mentah
             </label>
             <input type="number" 
-                   class="mentah w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                   class="mentah w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                    min="0" value="0" placeholder="0" oninput="validateNumber(this)">
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               Tandan Busuk
             </label>
             <input type="number" 
-                   class="busuk w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                   class="busuk w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                    min="0" value="0" placeholder="0" oninput="validateNumber(this)">
           </div>
           
           <div>
-            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+            <label class="block text-sm font-medium text-gray-700 mb-1">
               Jangkos
             </label>
             <input type="number" 
-                   class="jangkos w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                   class="jangkos w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                    min="0" value="0" placeholder="0" oninput="validateNumber(this)">
           </div>
         </div>
         
         <div>
-          <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+          <label class="block text-sm font-medium text-gray-700 mb-1">
             Berondolan (kg)
           </label>
           <input type="number" 
-                 class="berondolan w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:ring-1 focus:ring-green-500 focus:border-transparent"
+                 class="berondolan w-full px-3 py-2 border border-gray-300 rounded bg-white text-gray-800 focus:ring-1 focus:ring-green-500 focus:border-transparent"
                  min="0" value="0" placeholder="0" oninput="validateNumber(this)">
         </div>
       </div>
@@ -588,80 +575,19 @@ function updateKavlingOptions(selectPengurus, uniqueId) {
 // ==================== FUNGSI UI ====================
 
 function updateAllViews() {
-  const paginatedData = getPaginatedData();
-  updateTable(paginatedData);
-  updateMobileCards(paginatedData);
+  updateGroupedData();
   updateSummary();
   updatePagination();
 }
 
-function getPaginatedData() {
-  const start = (state.currentPage - 1) * state.itemsPerPage;
-  const end = start + state.itemsPerPage;
-  return state.dataPanen.slice(start, end);
-}
-
-function updateTable(data) {
-  const tabel = document.querySelector('#tabelPanen tbody');
-  if (!tabel) return;
+function updateGroupedData() {
+  const groupedData = document.getElementById('groupedData');
   
-  tabel.innerHTML = '';
-  
-  const startIndex = (state.currentPage - 1) * state.itemsPerPage;
-  
-  data.forEach((item, index) => {
-    const globalIndex = startIndex + index;
-    
-    const tr = document.createElement('tr');
-    tr.className = 'border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50';
-    tr.innerHTML = `
-      <td class="py-2 px-3 text-center text-sm">${globalIndex + 1}</td>
-      <td class="py-2 px-3 text-sm">${formatDate(item.tanggal)}</td>
-      <td class="py-2 px-3">
-        <span class="inline-block px-2 py-1 bg-green-100 text-green-800 rounded text-xs dark:bg-green-900 dark:text-green-300">
-          ${item.pemanen}
-        </span>
-      </td>
-      <td class="py-2 px-3 text-xs">${item.pengurus}</td>
-      <td class="py-2 px-3 text-sm font-medium">${item.kavling}</td>
-      <td class="py-2 px-3 text-center">
-        <span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs dark:bg-blue-900 dark:text-blue-300">
-          ${item.jumlahTandan}
-        </span>
-      </td>
-      <td class="py-2 px-3 text-center">
-        <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs dark:bg-yellow-900 dark:text-yellow-300">
-          ${item.berondolan} kg
-        </span>
-      </td>
-      <td class="py-2 px-3 text-center">
-        <div class="flex items-center justify-center gap-1">
-          <button onclick="showDetail('${item.id}')" 
-                  class="p-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                  title="Detail">
-            <i class="bi bi-eye"></i>
-          </button>
-          <button onclick="deleteData('${item.id}')" 
-                  class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                  title="Hapus">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-      </td>
-    `;
-    tabel.appendChild(tr);
-  });
-}
-
-function updateMobileCards(data) {
-  const mobileCards = document.getElementById('mobileCards');
-  if (!mobileCards) return;
-  
-  if (data.length === 0) {
-    mobileCards.innerHTML = `
-      <div class="text-center py-6 px-3">
-        <i class="bi bi-inbox text-3xl text-gray-400 dark:text-gray-600 mb-2"></i>
-        <p class="text-gray-500 dark:text-gray-400 text-sm">Belum ada data</p>
+  if (state.dataPanen.length === 0) {
+    groupedData.innerHTML = `
+      <div class="text-center py-6">
+        <i class="bi bi-inbox text-3xl text-gray-400 mb-2"></i>
+        <p class="text-gray-500 text-sm">Belum ada data</p>
         <button onclick="loadData()" 
                 class="mt-3 px-3 py-1.5 bg-blue-600 text-white rounded text-sm hover:bg-blue-700">
           <i class="bi bi-download me-1"></i> Muat Data
@@ -671,57 +597,101 @@ function updateMobileCards(data) {
     return;
   }
   
-  mobileCards.innerHTML = '';
+  // Kelompokkan data berdasarkan pemanen
+  const groupedByPemanen = {};
+  state.dataPanen.forEach(item => {
+    if (!groupedByPemanen[item.pemanen]) {
+      groupedByPemanen[item.pemanen] = [];
+    }
+    groupedByPemanen[item.pemanen].push(item);
+  });
   
-  data.forEach((item) => {
-    const detail = state.detailData[item.id];
+  // Urutkan nama pemanen
+  const sortedPemanen = Object.keys(groupedByPemanen).sort();
+  
+  let html = '<div class="space-y-2">';
+  
+  sortedPemanen.forEach((pemanen, index) => {
+    const items = groupedByPemanen[pemanen];
+    const totalTandan = items.reduce((sum, item) => sum + item.jumlahTandan, 0);
+    const totalBerondolan = items.reduce((sum, item) => sum + item.berondolan, 0);
+    const totalItems = items.length;
     
-    const card = document.createElement('div');
-    card.className = 'border-b border-gray-200 dark:border-gray-700 p-3';
-    card.innerHTML = `
-      <div class="flex justify-between items-start mb-2">
-        <div>
-          <div class="font-medium text-green-700 dark:text-green-400">${item.pemanen}</div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">${formatDate(item.tanggal)}</div>
+    html += `
+      <div class="border border-gray-200 rounded-lg overflow-hidden">
+        <button class="dropdown-toggle w-full px-3 py-3 bg-gray-50 text-left flex justify-between items-center hover:bg-gray-100"
+                onclick="toggleDropdown('dropdown${index}')">
+          <div class="flex items-center gap-2">
+            <i class="bi bi-person text-green-600"></i>
+            <div>
+              <div class="font-medium text-green-700">${pemanen}</div>
+              <div class="text-xs text-gray-500">
+                ${totalItems} data • ${totalTandan} tandan • ${totalBerondolan} kg berondolan
+              </div>
+            </div>
+          </div>
+          <i class="bi bi-chevron-down text-xs transition-transform"></i>
+        </button>
+        
+        <div id="dropdown${index}" class="dropdown-content">
+          <div class="p-3 bg-white border-t">
+            ${items.map(item => {
+              const detail = state.detailData[item.id];
+              return `
+                <div class="mb-3 last:mb-0 p-2 border border-gray-100 rounded">
+                  <div class="flex justify-between items-start mb-1">
+                    <div class="text-xs text-gray-500">${formatDate(item.tanggal)}</div>
+                    <div class="flex gap-1">
+                      <button onclick="showDetail('${item.id}')" 
+                              class="p-1 text-blue-600 hover:text-blue-800"
+                              title="Detail">
+                        <i class="bi bi-eye text-xs"></i>
+                      </button>
+                      <button onclick="deleteData('${item.id}')" 
+                              class="p-1 text-red-600 hover:text-red-800"
+                              title="Hapus">
+                        <i class="bi bi-trash text-xs"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                    <div>
+                      <div class="text-gray-500">Kelompok</div>
+                      <div class="font-medium truncate" title="${item.pengurus}">${item.pengurus.split(' - ')[0]}</div>
+                    </div>
+                    <div>
+                      <div class="text-gray-500">Kavling</div>
+                      <div class="font-medium">${item.kavling}</div>
+                    </div>
+                    <div>
+                      <div class="text-gray-500">Tandan</div>
+                      <div class="font-medium text-blue-600">${item.jumlahTandan}</div>
+                    </div>
+                  </div>
+                  <div class="mt-1 text-center">
+                    <span class="inline-block px-2 py-0.5 bg-yellow-100 text-yellow-800 rounded text-xs">
+                      Berondolan: ${item.berondolan} kg
+                    </span>
+                  </div>
+                </div>
+              `;
+            }).join('')}
+          </div>
         </div>
-        <div class="flex items-center gap-1">
-          <button onclick="showDetail('${item.id}')" 
-                  class="p-1 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300"
-                  title="Detail">
-            <i class="bi bi-eye"></i>
-          </button>
-          <button onclick="deleteData('${item.id}')" 
-                  class="p-1 text-red-600 hover:text-red-800 dark:text-red-400 dark:hover:text-red-300"
-                  title="Hapus">
-            <i class="bi bi-trash"></i>
-          </button>
-        </div>
-      </div>
-      
-      <div class="grid grid-cols-3 gap-1 mb-2">
-        <div class="text-center">
-          <div class="text-xs text-gray-500 dark:text-gray-400">Kelompok</div>
-          <div class="text-xs truncate">${item.pengurus.split(' - ')[0]}</div>
-        </div>
-        <div class="text-center">
-          <div class="text-xs text-gray-500 dark:text-gray-400">Kavling</div>
-          <div class="font-medium">${item.kavling}</div>
-        </div>
-        <div class="text-center">
-          <div class="text-xs text-gray-500 dark:text-gray-400">Tandan</div>
-          <div class="font-medium text-blue-600 dark:text-blue-400">${item.jumlahTandan}</div>
-        </div>
-      </div>
-      
-      <div class="text-center">
-        <span class="inline-block px-2 py-1 bg-yellow-100 text-yellow-800 rounded text-xs dark:bg-yellow-900 dark:text-yellow-300">
-          Berondolan: ${item.berondolan} kg
-        </span>
       </div>
     `;
-    
-    mobileCards.appendChild(card);
   });
+  
+  html += '</div>';
+  groupedData.innerHTML = html;
+}
+
+function toggleDropdown(id) {
+  const dropdown = document.getElementById(id);
+  const icon = dropdown.previousElementSibling.querySelector('.bi-chevron-down');
+  
+  dropdown.classList.toggle('show');
+  icon.classList.toggle('rotate-180');
 }
 
 function updateSummary() {
@@ -772,53 +742,53 @@ function showDetail(id) {
     <div class="space-y-3">
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">Tanggal</div>
+          <div class="text-xs text-gray-500">Tanggal</div>
           <div class="font-medium">${formatDate(data.tanggal)}</div>
         </div>
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">Kelompok</div>
+          <div class="text-xs text-gray-500">Kelompok</div>
           <div class="font-medium">${data.pengurus || '-'}</div>
         </div>
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">Pemanen</div>
+          <div class="text-xs text-gray-500">Pemanen</div>
           <div class="font-medium">${data.pemanen || '-'}</div>
         </div>
         <div>
-          <div class="text-xs text-gray-500 dark:text-gray-400">Kavling</div>
+          <div class="text-xs text-gray-500">Kavling</div>
           <div class="font-medium">${data.kavling || '-'}</div>
         </div>
       </div>
       
-      <div class="bg-gray-50 dark:bg-gray-900/50 p-3 rounded">
-        <div class="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">Detail Tandan</div>
+      <div class="bg-gray-50 p-3 rounded">
+        <div class="text-xs font-medium text-gray-700 mb-2">Detail Tandan</div>
         <div class="grid grid-cols-4 gap-2">
           <div class="text-center">
-            <div class="text-xs text-green-600 dark:text-green-400">Matang</div>
+            <div class="text-xs text-green-600">Matang</div>
             <div class="font-bold">${data.matang || 0}</div>
           </div>
           <div class="text-center">
-            <div class="text-xs text-yellow-600 dark:text-yellow-400">Mentah</div>
+            <div class="text-xs text-yellow-600">Mentah</div>
             <div class="font-bold">${data.mentah || 0}</div>
           </div>
           <div class="text-center">
-            <div class="text-xs text-red-600 dark:text-red-400">Busuk</div>
+            <div class="text-xs text-red-600">Busuk</div>
             <div class="font-bold">${data.busuk || 0}</div>
           </div>
           <div class="text-center">
-            <div class="text-xs text-blue-600 dark:text-blue-400">Jangkos</div>
+            <div class="text-xs text-blue-600">Jangkos</div>
             <div class="font-bold">${data.jangkos || 0}</div>
           </div>
         </div>
       </div>
       
       <div class="grid grid-cols-2 gap-3">
-        <div class="text-center bg-blue-50 dark:bg-blue-900/20 p-2 rounded">
-          <div class="text-xs text-gray-500 dark:text-gray-400">Total Tandan</div>
-          <div class="font-bold text-blue-600 dark:text-blue-400">${data.jumlahTandan || 0}</div>
+        <div class="text-center bg-blue-50 p-2 rounded">
+          <div class="text-xs text-gray-500">Total Tandan</div>
+          <div class="font-bold text-blue-600">${data.jumlahTandan || 0}</div>
         </div>
-        <div class="text-center bg-yellow-50 dark:bg-yellow-900/20 p-2 rounded">
-          <div class="text-xs text-gray-500 dark:text-gray-400">Berondolan</div>
-          <div class="font-bold text-yellow-600 dark:text-yellow-400">${data.berondolan || 0} kg</div>
+        <div class="text-center bg-yellow-50 p-2 rounded">
+          <div class="text-xs text-gray-500">Berondolan</div>
+          <div class="font-bold text-yellow-600">${data.berondolan || 0} kg</div>
         </div>
       </div>
     </div>
@@ -950,13 +920,35 @@ function toggleDarkMode() {
   state.isDarkMode = !state.isDarkMode;
   
   if (state.isDarkMode) {
-    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark-mode');
     document.getElementById('darkModeToggle').innerHTML = '<i class="bi bi-sun"></i>';
     localStorage.setItem('darkMode', 'true');
+    
+    // Update warna untuk komponen spesifik
+    document.querySelectorAll('.text-green-600').forEach(el => {
+      el.classList.add('dark-text-green-400');
+    });
+    document.querySelectorAll('.text-blue-600').forEach(el => {
+      el.classList.add('dark-text-blue-400');
+    });
+    document.querySelectorAll('.text-yellow-600').forEach(el => {
+      el.classList.add('dark-text-yellow-400');
+    });
   } else {
-    document.documentElement.classList.remove('dark');
+    document.body.classList.remove('dark-mode');
     document.getElementById('darkModeToggle').innerHTML = '<i class="bi bi-moon"></i>';
     localStorage.setItem('darkMode', 'false');
+    
+    // Hapus kelas dark mode
+    document.querySelectorAll('.dark-text-green-400').forEach(el => {
+      el.classList.remove('dark-text-green-400');
+    });
+    document.querySelectorAll('.dark-text-blue-400').forEach(el => {
+      el.classList.remove('dark-text-blue-400');
+    });
+    document.querySelectorAll('.dark-text-yellow-400').forEach(el => {
+      el.classList.remove('dark-text-yellow-400');
+    });
   }
 }
 
@@ -965,7 +957,7 @@ function toggleDarkMode() {
 document.addEventListener('DOMContentLoaded', function() {
   // Set dark mode
   if (state.isDarkMode) {
-    document.documentElement.classList.add('dark');
+    document.body.classList.add('dark-mode');
     document.getElementById('darkModeToggle').innerHTML = '<i class="bi bi-sun"></i>';
   }
   
