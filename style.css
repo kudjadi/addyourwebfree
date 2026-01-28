@@ -86,3 +86,19 @@ input:focus, select:focus {
   ring: 2px;
   ring-color: #10b981;
 }
+
+/* Mobile dropdown styles */
+.mobile-dropdown-content {
+  transition: max-height 0.3s ease-out;
+  max-height: 0;
+  overflow: hidden;
+}
+
+.mobile-dropdown-content:not(.hidden) {
+  max-height: 500px;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
