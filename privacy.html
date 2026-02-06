@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kebijakan Privasi | Pendataan Panen Sawit</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
+    
+    /* Smooth transition */
+    .section-content {
+      transition: all 0.3s ease;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-green-700 mb-2">
+        <i class="bi bi-shield-lock me-2"></i>Kebijakan Privasi
+      </h1>
+      <p class="text-gray-600">
+        Terakhir diperbarui: <span id="currentDate"></span>
+      </p>
+    </div>
+
+    <!-- Navigation TOC -->
+    <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+      <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+        <i class="bi bi-list-ol me-2"></i>Daftar Isi
+      </h2>
+      <nav class="space-y-2">
+        <a href="#pengumpulan-data" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Pengumpulan Data</span>
+        </a>
+        <a href="#penggunaan-data" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Penggunaan Data</span>
+        </a>
+        <a href="#penyimpanan-data" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Penyimpanan Data</span>
+        </a>
+        <a href="#perlindungan-data" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Perlindungan Data</span>
+        </a>
+        <a href="#hak-pengguna" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Hak Pengguna</span>
+        </a>
+        <a href="#cookie" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Penggunaan Cookie</span>
+        </a>
+        <a href="#kontak" class="flex items-center text-gray-700 hover:text-green-600 hover:bg-green-50 p-2 rounded-lg transition duration-200">
+          <i class="bi bi-chevron-right me-2 text-green-500"></i>
+          <span>Kontak Kami</span>
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="space-y-6">
+      <!-- Introduction -->
+      <div class="bg-white rounded-lg shadow-md p-6">
+        <p class="text-gray-700 leading-relaxed">
+          Kebijakan Privasi ini menjelaskan bagaimana kami mengumpulkan, menggunakan, dan melindungi informasi pribadi Anda 
+          ketika Anda menggunakan aplikasi <strong class="text-green-700">Pendataan Panen Sawit</strong>. 
+          Kami berkomitmen untuk melindungi privasi Anda dan memastikan bahwa data pribadi Anda dikelola dengan aman.
+        </p>
+      </div>
+
+      <!-- Section 1: Pengumpulan Data -->
+      <div id="pengumpulan-data" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-database me-2"></i>1. Pengumpulan Data
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="bg-green-50 p-4 rounded-lg">
+              <h3 class="font-medium text-green-700 mb-2">Data yang Kami Kumpulkan:</h3>
+              <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                <li><strong>Data Identitas:</strong> Nama, email, nomor telepon, dan informasi kontak lainnya</li>
+                <li><strong>Data Perusahaan:</strong> Nama perusahaan, alamat, dan informasi terkait perkebunan</li>
+                <li><strong>Data Operasional:</strong> Data panen, hasil produksi, lokasi kebun, dan data operasional lainnya</li>
+                <li><strong>Data Teknis:</strong> Informasi perangkat, alamat IP, jenis browser, dan data log sistem</li>
+              </ul>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-2">Metode Pengumpulan:</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="flex items-start">
+                  <i class="bi bi-input-cursor text-green-600 mt-1 me-2"></i>
+                  <div>
+                    <p class="font-medium">Input Pengguna</p>
+                    <p class="text-sm text-gray-600">Data yang Anda masukkan secara manual</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="bi bi-upload text-green-600 mt-1 me-2"></i>
+                  <div>
+                    <p class="font-medium">Upload File</p>
+                    <p class="text-sm text-gray-600">Dokumen dan file yang Anda unggah</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="bi bi-gear text-green-600 mt-1 me-2"></i>
+                  <div>
+                    <p class="font-medium">Otomatis</p>
+                    <p class="text-sm text-gray-600">Data teknis dan log sistem</p>
+                  </div>
+                </div>
+                <div class="flex items-start">
+                  <i class="bi bi-cookie text-green-600 mt-1 me-2"></i>
+                  <div>
+                    <p class="font-medium">Cookie & Analytics</p>
+                    <p class="text-sm text-gray-600">Data penggunaan aplikasi</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Penggunaan Data -->
+      <div id="penggunaan-data" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-graph-up me-2"></i>2. Penggunaan Data
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <div class="flex items-center mb-3">
+                  <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center me-3">
+                    <i class="bi bi-check2-circle text-green-600"></i>
+                  </div>
+                  <h3 class="font-medium">Layanan Utama</h3>
+                </div>
+                <p class="text-sm text-gray-600">Menyediakan dan mengelola layanan pendataan panen sawit</p>
+              </div>
+              
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <div class="flex items-center mb-3">
+                  <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center me-3">
+                    <i class="bi bi-shield-check text-blue-600"></i>
+                  </div>
+                  <h3 class="font-medium">Keamanan</h3>
+                </div>
+                <p class="text-sm text-gray-600">Memastikan keamanan sistem dan mencegah penyalahgunaan</p>
+              </div>
+              
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <div class="flex items-center mb-3">
+                  <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center me-3">
+                    <i class="bi bi-bar-chart text-yellow-600"></i>
+                  </div>
+                  <h3 class="font-medium">Analisis</h3>
+                </div>
+                <p class="text-sm text-gray-600">Menganalisis penggunaan untuk pengembangan fitur</p>
+              </div>
+              
+              <div class="bg-white p-4 rounded-lg border border-gray-200">
+                <div class="flex items-center mb-3">
+                  <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center me-3">
+                    <i class="bi bi-headset text-purple-600"></i>
+                  </div>
+                  <h3 class="font-medium">Dukungan</h3>
+                </div>
+                <p class="text-sm text-gray-600">Memberikan dukungan teknis dan layanan pelanggan</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Penyimpanan Data -->
+      <div id="penyimpanan-data" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-hdd me-2"></i>3. Penyimpanan Data
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="font-medium text-gray-700 mb-3">Durasi Penyimpanan</h3>
+              <div class="space-y-3">
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                  <span class="font-medium">Data Operasional</span>
+                  <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Selama akun aktif</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                  <span class="font-medium">Data Backup</span>
+                  <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">5 tahun</span>
+                </div>
+                <div class="flex justify-between items-center p-3 bg-white rounded-lg border">
+                  <span class="font-medium">Data Log Sistem</span>
+                  <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">2 tahun</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-green-50 p-4 rounded-lg">
+              <h3 class="font-medium text-green-700 mb-2">Lokasi Penyimpanan</h3>
+              <p class="text-gray-700">
+                Data Anda disimpan di server yang berlokasi di Indonesia dengan standar keamanan tinggi. 
+                Kami menggunakan penyedia layanan cloud yang mematuhi regulasi perlindungan data Indonesia.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Perlindungan Data -->
+      <div id="perlindungan-data" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-lock me-2"></i>4. Perlindungan Data
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="text-center p-4 border border-gray-200 rounded-lg">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="bi bi-shield-slash text-red-600 text-xl"></i>
+                </div>
+                <h4 class="font-medium mb-2">Enkripsi Data</h4>
+                <p class="text-sm text-gray-600">Semua data dienkripsi dengan standar AES-256</p>
+              </div>
+              
+              <div class="text-center p-4 border border-gray-200 rounded-lg">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="bi bi-fire text-blue-600 text-xl"></i>
+                </div>
+                <h4 class="font-medium mb-2">Firewall</h4>
+                <p class="text-sm text-gray-600">Perlindungan lapisan ganda dari serangan eksternal</p>
+              </div>
+              
+              <div class="text-center p-4 border border-gray-200 rounded-lg">
+                <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                  <i class="bi bi-backup text-green-600 text-xl"></i>
+                </div>
+                <h4 class="font-medium mb-2">Backup Rutin</h4>
+                <p class="text-sm text-gray-600">Backup harian dan pemulihan data otomatis</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Hak Pengguna -->
+      <div id="hak-pengguna" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-person-check me-2"></i>5. Hak Pengguna
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="bg-white p-4 rounded-lg border border-gray-200">
+              <div class="space-y-3">
+                <div class="flex items-start">
+                  <i class="bi bi-eye text-green-600 mt-1 me-3"></i>
+                  <div>
+                    <p class="font-medium">Hak Akses</p>
+                    <p class="text-sm text-gray-600">Mengakses data pribadi Anda yang kami simpan</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <i class="bi bi-pencil text-green-600 mt-1 me-3"></i>
+                  <div>
+                    <p class="font-medium">Hak Perbaikan</p>
+                    <p class="text-sm text-gray-600">Memperbaiki data yang tidak akurat atau tidak lengkap</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <i class="bi bi-trash text-green-600 mt-1 me-3"></i>
+                  <div>
+                    <p class="font-medium">Hak Penghapusan</p>
+                    <p class="text-sm text-gray-600">Meminta penghapusan data pribadi Anda</p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <i class="bi bi-download text-green-600 mt-1 me-3"></i>
+                  <div>
+                    <p class="font-medium">Hak Portabilitas</p>
+                    <p class="text-sm text-gray-600">Menerima data Anda dalam format yang terstruktur</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg">
+              <h3 class="font-medium text-yellow-700 mb-2 flex items-center">
+                <i class="bi bi-info-circle me-2"></i>Cara Menggunakan Hak Anda
+              </h3>
+              <p class="text-sm text-gray-700">
+                Untuk menggunakan hak-hak di atas, silakan hubungi kami melalui halaman kontak. 
+                Kami akan merespon permintaan Anda dalam waktu 14 hari kerja.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: Cookie -->
+      <div id="cookie" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-cookie me-2"></i>6. Penggunaan Cookie
+          </h2>
+          <div class="space-y-4 section-content">
+            <div class="bg-white p-4 rounded-lg border border-gray-200">
+              <p class="text-gray-700 mb-4">
+                Kami menggunakan cookie untuk meningkatkan pengalaman pengguna dan menganalisis penggunaan aplikasi.
+              </p>
+              
+              <div class="space-y-3">
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p class="font-medium">Cookie Penting</p>
+                    <p class="text-sm text-gray-600">Diperlukan untuk fungsi dasar aplikasi</p>
+                  </div>
+                  <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm">Tidak bisa dinonaktifkan</span>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p class="font-medium">Cookie Analitik</p>
+                    <p class="text-sm text-gray-600">Untuk analisis penggunaan aplikasi</p>
+                  </div>
+                  <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">Bisa dinonaktifkan</span>
+                </div>
+                
+                <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                  <div>
+                    <p class="font-medium">Cookie Preferensi</p>
+                    <p class="text-sm text-gray-600">Menyimpan preferensi pengguna</p>
+                  </div>
+                  <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-sm">Bisa dinonaktifkan</span>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-2">Cara Mengelola Cookie</h3>
+              <p class="text-sm text-gray-700">
+                Anda dapat mengelola preferensi cookie melalui pengaturan browser Anda. 
+                Namun, menonaktifkan cookie penting dapat mempengaruhi fungsi aplikasi.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7: Kontak -->
+      <div id="kontak" class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-telephone me-2"></i>7. Kontak Kami
+          </h2>
+          <div class="section-content">
+            <div class="bg-white p-6 rounded-lg border border-gray-200">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 class="font-medium text-gray-700 mb-3">Pertanyaan Privasi</h3>
+                  <div class="space-y-3">
+                    <div class="flex items-center">
+                      <i class="bi bi-envelope text-green-600 me-3"></i>
+                      <div>
+                        <p class="text-sm font-medium">Email</p>
+                        <a href="mailto:privacy@panensawit.com" class="text-green-600 hover:text-green-700 text-sm">
+                          privacy@panensawit.com
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                      <i class="bi bi-clock text-green-600 me-3"></i>
+                      <div>
+                        <p class="text-sm font-medium">Jam Operasional</p>
+                        <p class="text-sm text-gray-600">Senin-Jumat, 08:00-17:00 WIB</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 class="font-medium text-gray-700 mb-3">Formulir Permintaan</h3>
+                  <p class="text-sm text-gray-600 mb-3">
+                    Gunakan formulir kontak kami untuk permintaan terkait privasi data.
+                  </p>
+                  <a href="kontak.html" 
+                     class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-200">
+                    <i class="bi bi-arrow-right me-2"></i>
+                    Ke Halaman Kontak
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Footer Note -->
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+        <div class="flex items-start">
+          <i class="bi bi-exclamation-triangle text-yellow-600 text-xl mt-1 me-3"></i>
+          <div>
+            <h3 class="font-medium text-yellow-700 mb-2">Penting</h3>
+            <p class="text-sm text-gray-700">
+              Kebijakan Privasi ini dapat diperbarui dari waktu ke waktu. 
+              Kami akan memberi tahu Anda tentang perubahan signifikan melalui email atau notifikasi di aplikasi. 
+              Disarankan untuk meninjau kebijakan ini secara berkala.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" 
+          class="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center hover:bg-green-700 transition duration-200 hidden">
+    <i class="bi bi-chevron-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if(targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if(targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 20,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    // Back to top button
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.classList.remove('hidden');
+      } else {
+        backToTopBtn.classList.add('hidden');
+      }
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Highlight current section
+    window.addEventListener('scroll', () => {
+      const sections = document.querySelectorAll('.section-content');
+      const scrollPosition = window.scrollY + 100;
+      
+      sections.forEach(section => {
+        const sectionTop = section.parentElement.offsetTop;
+        const sectionHeight = section.parentElement.clientHeight;
+        
+        if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+          section.style.opacity = '1';
+          section.style.transform = 'translateY(0)';
+        }
+      });
+    });
+    
+    // Initialize sections
+    document.querySelectorAll('.section-content').forEach(section => {
+      section.style.opacity = '0';
+      section.style.transform = 'translateY(20px)';
+    });
+    
+    // Trigger scroll once to initialize
+    setTimeout(() => {
+      window.dispatchEvent(new Event('scroll'));
+    }, 100);
+  </script>
+</body>
+</html>

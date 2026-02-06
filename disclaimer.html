@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Disclaimer | Pendataan Panen Sawit</title>
+  
+  <!-- Tailwind CSS via CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+  
+  <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #10b981;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #059669;
+    }
+    
+    /* Animation for warning icons */
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .warning-icon {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-4xl">
+    <!-- Header -->
+    <div class="text-center mb-8">
+      <h1 class="text-2xl font-bold text-yellow-600 mb-2">
+        <i class="bi bi-exclamation-triangle me-2 warning-icon"></i>Pernyataan Penafian (Disclaimer)
+      </h1>
+      <p class="text-gray-600">
+        Terakhir diperbarui: <span id="currentDate"></span>
+      </p>
+    </div>
+
+    <!-- Warning Banner -->
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6 mb-6">
+      <div class="flex items-start">
+        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center mr-4">
+          <i class="bi bi-exclamation-triangle text-yellow-600 text-xl"></i>
+        </div>
+        <div>
+          <h3 class="font-semibold text-yellow-800 mb-2">Penting: Harap Dibaca</h3>
+          <p class="text-yellow-700">
+            Halaman ini berisi pernyataan penafian hukum yang penting terkait penggunaan aplikasi Pendataan Panen Sawit. 
+            Dengan menggunakan aplikasi ini, Anda menyetujui semua ketentuan yang tercantum di bawah ini.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="space-y-6">
+      <!-- Section 1: Informasi Umum -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-info-circle me-2"></i>1. Informasi Umum
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded-lg border border-gray-200">
+              <p class="text-gray-700 leading-relaxed">
+                Aplikasi <strong class="text-green-700">Pendataan Panen Sawit</strong> adalah alat bantu digital yang dirancang untuk memfasilitasi pencatatan dan pengelolaan data panen kelapa sawit. 
+                Informasi yang tersedia dalam aplikasi ini dimaksudkan untuk tujuan <strong>informasional dan referensi</strong> saja.
+              </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="bg-blue-50 p-4 rounded-lg">
+                <h3 class="font-medium text-blue-700 mb-2 flex items-center">
+                  <i class="bi bi-check-circle me-2"></i>Fungsi Aplikasi
+                </h3>
+                <p class="text-sm text-gray-700">
+                  Alat pencatatan data panen sawit digital yang memudahkan pengguna dalam mengelola data produksi.
+                </p>
+              </div>
+              
+              <div class="bg-red-50 p-4 rounded-lg">
+                <h3 class="font-medium text-red-700 mb-2 flex items-center">
+                  <i class="bi bi-x-circle me-2"></i>Bukan Fungsi Aplikasi
+                </h3>
+                <p class="text-sm text-gray-700">
+                  Bukan alat analisis finansial, bukan penasihat investasi, dan bukan pengganti konsultan profesional.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Ketepatan Data -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-clipboard-data me-2"></i>2. Ketepatan dan Kelengkapan Data
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-red-50 p-4 rounded-lg">
+              <div class="flex items-center mb-3">
+                <i class="bi bi-exclamation-octagon text-red-600 text-xl mr-3"></i>
+                <h3 class="font-medium text-red-700">Peringatan Penting</h3>
+              </div>
+              <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                <li>Kami <strong>tidak menjamin</strong> ketepatan, kelengkapan, atau keakuratan data yang dimasukkan oleh pengguna</li>
+                <li>Data yang ditampilkan bergantung pada input dari pengguna masing-masing</li>
+                <li>Kesalahan input data sepenuhnya menjadi tanggung jawab pengguna yang bersangkutan</li>
+                <li>Selalu verifikasi data dengan sumber resmi sebelum membuat keputusan penting</li>
+              </ul>
+            </div>
+            
+            <div class="bg-white p-4 rounded-lg border border-gray-200">
+              <h3 class="font-medium text-gray-700 mb-3 flex items-center">
+                <i class="bi bi-shield-check text-green-600 me-2"></i>Rekomendasi Verifikasi
+              </h3>
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-center">
+                <div class="p-3 border border-green-200 rounded-lg">
+                  <i class="bi bi-calendar-check text-green-600 text-lg mb-2"></i>
+                  <p class="text-xs font-medium">Cross-check Data</p>
+                </div>
+                <div class="p-3 border border-green-200 rounded-lg">
+                  <i class="bi bi-file-earmark-text text-green-600 text-lg mb-2"></i>
+                  <p class="text-xs font-medium">Dokumen Resmi</p>
+                </div>
+                <div class="p-3 border border-green-200 rounded-lg">
+                  <i class="bi bi-person-check text-green-600 text-lg mb-2"></i>
+                  <p class="text-xs font-medium">Ahli Terkait</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 3: Tanggung Jawab -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-shield-exclamation me-2"></i>3. Batasan Tanggung Jawab
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-gray-50 p-4 rounded-lg">
+              <h3 class="font-medium text-gray-700 mb-3">Pernyataan Tanggung Jawab</h3>
+              <div class="space-y-3">
+                <div class="flex items-start p-3 bg-white rounded-lg border">
+                  <i class="bi bi-x-circle text-red-500 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Kami TIDAK Bertanggung Jawab Untuk:</p>
+                    <p class="text-sm text-gray-600 mt-1">
+                      Kerugian finansial, kehilangan data, atau kerusakan yang timbul dari penggunaan aplikasi ini
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start p-3 bg-white rounded-lg border">
+                  <i class="bi bi-x-circle text-red-500 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Kami TIDAK Memberikan:</p>
+                    <p class="text-sm text-gray-600 mt-1">
+                      Jaminan atas keakuratan data, nasihat investasi, atau rekomendasi keputusan bisnis
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start p-3 bg-white rounded-lg border">
+                  <i class="bi bi-check-circle text-green-500 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Tanggung Jawab Pengguna:</p>
+                    <p class="text-sm text-gray-600 mt-1">
+                      Memastikan keakuratan data input dan mengambil keputusan berdasarkan verifikasi yang memadai
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 4: Risiko Penggunaan -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-flag me-2"></i>4. Pengakuan Risiko
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-red-50 p-4 rounded-lg">
+              <div class="flex items-center mb-3">
+                <i class="bi bi-flag text-red-600 text-xl mr-3"></i>
+                <h3 class="font-medium text-red-700">Risiko yang Diakui</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-3 rounded border">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                      <i class="bi bi-emoji-dizzy text-red-600"></i>
+                    </div>
+                    <p class="font-medium">Risiko Data</p>
+                  </div>
+                  <p class="text-xs text-gray-600">
+                    Potensi ketidakakuratan data input, kesalahan teknis, atau kehilangan data
+                  </p>
+                </div>
+                
+                <div class="bg-white p-3 rounded border">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                      <i class="bi bi-cash-coin text-red-600"></i>
+                    </div>
+                    <p class="font-medium">Risiko Finansial</p>
+                  </div>
+                  <p class="text-xs text-gray-600">
+                    Keputusan bisnis berdasarkan data aplikasi tanpa verifikasi yang memadai
+                  </p>
+                </div>
+                
+                <div class="bg-white p-3 rounded border">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                      <i class="bi bi-cloud-slash text-red-600"></i>
+                    </div>
+                    <p class="font-medium">Risiko Teknis</p>
+                  </div>
+                  <p class="text-xs text-gray-600">
+                    Gangguan server, masalah koneksi internet, atau kegagalan sistem
+                  </p>
+                </div>
+                
+                <div class="bg-white p-3 rounded border">
+                  <div class="flex items-center mb-2">
+                    <div class="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center mr-2">
+                      <i class="bi bi-person-x text-red-600"></i>
+                    </div>
+                    <p class="font-medium">Risiko Operasional</p>
+                  </div>
+                  <p class="text-xs text-gray-600">
+                    Kesalahan manusia dalam input data atau interpretasi informasi
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-2 flex items-center">
+                <i class="bi bi-lightbulb me-2"></i>Rekomendasi Mitigasi Risiko
+              </h3>
+              <ul class="list-disc pl-5 space-y-2 text-gray-700">
+                <li>Selalu backup data penting secara terpisah</li>
+                <li>Verifikasi data dengan sumber resmi sebelum pengambilan keputusan</li>
+                <li>Gunakan aplikasi sebagai alat bantu, bukan sebagai satu-satunya sumber kebenaran</li>
+                <li>Konsultasikan dengan ahli terkait untuk keputusan penting</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 5: Kepemilikan & Lisensi -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-c-circle me-2"></i>5. Kepemilikan dan Hak Kekayaan Intelektual
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-white p-4 rounded-lg border border-gray-200">
+              <div class="space-y-3">
+                <div class="flex items-start">
+                  <i class="bi bi-code-slash text-green-600 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Hak Cipta Aplikasi</p>
+                    <p class="text-sm text-gray-600">
+                      Seluruh kode sumber, desain, dan konten aplikasi dilindungi hak cipta © 2024
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <i class="bi bi-database text-green-600 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Data Pengguna</p>
+                    <p class="text-sm text-gray-600">
+                      Data yang dimasukkan oleh pengguna tetap menjadi hak milik pengguna tersebut
+                    </p>
+                  </div>
+                </div>
+                
+                <div class="flex items-start">
+                  <i class="bi bi-share text-green-600 mt-1 mr-3"></i>
+                  <div>
+                    <p class="font-medium">Lisensi Penggunaan</p>
+                    <p class="text-sm text-gray-600">
+                      Pengguna diberikan lisensi terbatas untuk menggunakan aplikasi sesuai ketentuan
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-red-50 p-4 rounded-lg">
+              <h3 class="font-medium text-red-700 mb-2 flex items-center">
+                <i class="bi bi-ban me-2"></i>Larangan
+              </h3>
+              <ul class="list-disc pl-5 space-y-1 text-gray-700 text-sm">
+                <li>Reverse engineering, dekompilasi, atau modifikasi kode sumber aplikasi</li>
+                <li>Penggunaan aplikasi untuk aktivitas ilegal atau tidak etis</li>
+                <li>Penyebaran data aplikasi tanpa izin tertulis</li>
+                <li>Pelanggaran hak kekayaan intelektual pihak ketiga melalui aplikasi</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 6: Perubahan Ketentuan -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-yellow-50 border-l-4 border-yellow-500 p-6">
+          <h2 class="text-lg font-semibold text-yellow-700 mb-4 flex items-center">
+            <i class="bi bi-arrow-repeat me-2"></i>6. Perubahan Ketentuan
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <div class="flex items-center mb-3">
+                <i class="bi bi-bell text-blue-600 text-xl mr-3"></i>
+                <div>
+                  <h3 class="font-medium text-blue-700">Hak Perubahan</h3>
+                  <p class="text-sm text-blue-600">
+                    Kami berhak mengubah, memperbarui, atau merevisi pernyataan disclaimer ini kapan saja
+                  </p>
+                </div>
+              </div>
+              
+              <div class="bg-white p-4 rounded border">
+                <h4 class="font-medium text-gray-700 mb-2">Mekanisme Pemberitahuan</h4>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  <div class="flex items-center">
+                    <i class="bi bi-envelope text-green-600 mr-2"></i>
+                    <p class="text-sm">Email notifikasi</p>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="bi bi-app text-green-600 mr-2"></i>
+                    <p class="text-sm">Notifikasi dalam aplikasi</p>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="bi bi-globe text-green-600 mr-2"></i>
+                    <p class="text-sm">Pengumuman di website</p>
+                  </div>
+                  <div class="flex items-center">
+                    <i class="bi bi-calendar-event text-green-600 mr-2"></i>
+                    <p class="text-sm">Tanggal efektif diperbarui</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+              <h3 class="font-medium text-yellow-700 mb-2 flex items-center">
+                <i class="bi bi-eye me-2"></i>Kewajiban Pengguna
+              </h3>
+              <p class="text-sm text-gray-700">
+                Pengguna bertanggung jawab untuk secara berkala memeriksa halaman disclaimer ini untuk mengetahui perubahan. 
+                Penggunaan aplikasi yang berkelanjutan setelah perubahan berlaku berarti penerimaan terhadap perubahan tersebut.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 7: Penerimaan Ketentuan -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-green-50 border-l-4 border-green-500 p-6">
+          <h2 class="text-lg font-semibold text-green-700 mb-4 flex items-center">
+            <i class="bi bi-hand-thumbs-up me-2"></i>7. Penerimaan Ketentuan
+          </h2>
+          <div class="space-y-4">
+            <div class="bg-white p-6 rounded-lg border border-gray-200 text-center">
+              <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <i class="bi bi-check2-circle text-3xl text-green-600"></i>
+              </div>
+              <h3 class="font-medium text-gray-800 mb-3">Konfirmasi Penerimaan</h3>
+              <p class="text-gray-700 mb-4">
+                Dengan mengakses dan menggunakan aplikasi Pendataan Panen Sawit, Anda menyatakan bahwa:
+              </p>
+              
+              <div class="max-w-md mx-auto space-y-3 text-left">
+                <div class="flex items-start">
+                  <i class="bi bi-check text-green-600 mt-1 mr-2"></i>
+                  <p class="text-sm text-gray-700">
+                    Anda telah membaca dan memahami seluruh isi pernyataan disclaimer ini
+                  </p>
+                </div>
+                <div class="flex items-start">
+                  <i class="bi bi-check text-green-600 mt-1 mr-2"></i>
+                  <p class="text-sm text-gray-700">
+                    Anda menyetujui semua ketentuan dan kondisi yang tercantum
+                  </p>
+                </div>
+                <div class="flex items-start">
+                  <i class="bi bi-check text-green-600 mt-1 mr-2"></i>
+                  <p class="text-sm text-gray-700">
+                    Anda bertanggung jawab penuh atas penggunaan aplikasi dan data yang dimasukkan
+                  </p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-blue-50 p-4 rounded-lg">
+              <h3 class="font-medium text-blue-700 mb-2 flex items-center">
+                <i class="bi bi-question-circle me-2"></i>Jika Tidak Menyetujui
+              </h3>
+              <p class="text-sm text-gray-700">
+                Jika Anda tidak setuju dengan sebagian atau seluruh ketentuan dalam disclaimer ini, 
+                Anda harus <strong class="text-red-600">segera menghentikan penggunaan aplikasi</strong> dan menghapus semua data yang terkait.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 8: Kontak & Pertanyaan -->
+      <div class="bg-white rounded-lg shadow-md overflow-hidden">
+        <div class="bg-blue-50 border-l-4 border-blue-500 p-6">
+          <h2 class="text-lg font-semibold text-blue-700 mb-4 flex items-center">
+            <i class="bi bi-telephone me-2"></i>8. Kontak untuk Pertanyaan
+          </h2>
+          <div class="section-content">
+            <div class="bg-white p-6 rounded-lg border border-gray-200">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                  <h3 class="font-medium text-gray-700 mb-3">Pertanyaan Hukum</h3>
+                  <div class="space-y-3">
+                    <div class="flex items-center">
+                      <i class="bi bi-envelope text-green-600 me-3"></i>
+                      <div>
+                        <p class="text-sm font-medium">Email</p>
+                        <a href="mailto:legal@panensawit.com" class="text-green-600 hover:text-green-700 text-sm">
+                          legal@panensawit.com
+                        </a>
+                      </div>
+                    </div>
+                    
+                    <div class="flex items-center">
+                      <i class="bi bi-clock text-green-600 me-3"></i>
+                      <div>
+                        <p class="text-sm font-medium">Jam Operasional</p>
+                        <p class="text-sm text-gray-600">Senin-Jumat, 09:00-17:00 WIB</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <h3 class="font-medium text-gray-700 mb-3">Dokumen Terkait</h3>
+                  <div class="space-y-2">
+                    <a href="privacy-policy.html" 
+                       class="flex items-center text-gray-600 hover:text-green-600 p-2 hover:bg-gray-50 rounded-lg">
+                      <i class="bi bi-shield-lock me-2"></i>
+                      <span class="text-sm">Kebijakan Privasi</span>
+                    </a>
+                    <a href="terms.html" 
+                       class="flex items-center text-gray-600 hover:text-green-600 p-2 hover:bg-gray-50 rounded-lg">
+                      <i class="bi bi-file-text me-2"></i>
+                      <span class="text-sm">Syarat & Ketentuan</span>
+                    </a>
+                    <a href="contact.html" 
+                       class="flex items-center text-gray-600 hover:text-green-600 p-2 hover:bg-gray-50 rounded-lg">
+                      <i class="bi bi-envelope me-2"></i>
+                      <span class="text-sm">Hubungi Kami</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Final Warning -->
+      <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+        <div class="flex items-start">
+          <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+            <i class="bi bi-exclamation-octagon text-red-600 text-xl"></i>
+          </div>
+          <div>
+            <h3 class="font-semibold text-red-800 mb-2">Peringatan Akhir</h3>
+            <p class="text-red-700 mb-3">
+              Aplikasi ini merupakan alat bantu teknis dan <strong>BUKAN pengganti</strong> untuk:
+            </p>
+            <ul class="list-disc pl-5 space-y-1 text-red-600">
+              <li>Nasihat hukum dari pengacara profesional</li>
+              <li>Konsultasi agronomi dari ahli perkebunan</li>
+              <li>Analisis finansial dari akuntan profesional</li>
+              <li>Keputusan manajemen dari konsultan bisnis</li>
+            </ul>
+            <p class="text-red-700 mt-3">
+              Selalu konsultasikan dengan profesional terkait sebelum membuat keputusan penting berdasarkan data dari aplikasi ini.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Back to Top Button -->
+  <button id="backToTop" 
+          class="fixed bottom-4 right-4 z-50 w-12 h-12 rounded-full bg-green-600 text-white shadow-lg flex items-center justify-center hover:bg-green-700 transition duration-200 hidden">
+    <i class="bi bi-chevron-up"></i>
+  </button>
+
+  <!-- JavaScript -->
+  <script>
+    // Set current date
+    document.getElementById('currentDate').textContent = new Date().toLocaleDateString('id-ID', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+    
+    // Back to top button
+    const backToTopBtn = document.getElementById('backToTop');
+    
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTopBtn.classList.remove('hidden');
+      } else {
+        backToTopBtn.classList.add('hidden');
+      }
+    });
+    
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+    
+    // Smooth scroll for anchor links (simplified)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if(targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if(targetElement) {
+          targetElement.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Add click confirmation for important sections
+    document.querySelectorAll('.bg-red-50').forEach(section => {
+      section.addEventListener('click', function() {
+        this.style.transform = 'scale(1.01)';
+        setTimeout(() => {
+          this.style.transform = 'scale(1)';
+        }, 200);
+      });
+    });
+  </script>
+</body>
+</html>
